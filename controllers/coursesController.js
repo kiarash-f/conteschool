@@ -75,3 +75,56 @@ exports.deleteCourse = catchAsync(async (req, res, next) => {
         data: null,
     });
 });
+exports.enrollStudent = catchAsync(async (req, res, next) => {
+  const { courseId, userId } = req.body;
+
+  const course = await Course.findById(courseId);
+  const user = await User.findById(userId);
+
+  if (!course || !user) {
+    return next(new AppError('User or Course not found', 404));
+  }
+
+  if (course.availableSeats <= 0) {
+    return next(new AppError('No available seats for this course', 400));
+  }
+
+  // Prevent duplicate enrollment
+  if (course.enrolledStudents.includes(userId)) {
+    return next(new AppError('User already enrolled in this course', 400));
+  }
+
+  // Update course
+  course.enrolledStudents.push(userId);
+  course.availableSeats -= 1;
+  await course.save();
+
+  // Update user
+  user.enrolledCourses.push(courseId);
+  await user.save();
+
+  res.status(200).json({
+    status: 'success',
+    message: 'User enrolled in course',
+    data: {
+      course,
+      user
+    }
+  });
+});
+exports.getEnrolledStudents = catchAsync(async (req, res, next) => {
+  const course = await Course.findById(req.params.id).populate('enrolledStudents');
+
+  if (!course) {
+    return next(new AppError('Course not found', 404));
+  }
+
+  res.status(200).json({
+    status: 'success',
+    results: course.enrolledStudents.length,
+    data: {
+      students: course.enrolledStudents
+    }
+  });
+});
+

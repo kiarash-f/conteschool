@@ -3,6 +3,9 @@ const coursesController = require('../controllers/coursesController');
 const authController = require('../controllers/authController');
 
 const router = express.Router();
+// routes/courseRoutes.js
+router.patch('/enroll', coursesController.enrollStudent);//handle user enrollment
+router.get('/:id/enrolled-students', coursesController.getEnrolledStudents);//get user who enrolled in the course
 
 router
   .route('/')
