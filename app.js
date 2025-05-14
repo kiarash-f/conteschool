@@ -10,7 +10,12 @@ const studentWorkRoute = require('./routes/studentWorkRoute');
 const app = express();
 
 /// ✅ Enable CORS
-app.use(cors());
+app.use(
+  cors({
+    origin: allowedOrigin,
+    credentials: true,
+  })
+);
 
 // ✅ Logger for development
 app.use(morgan('dev'));
@@ -26,7 +31,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // ✅ Mount API Routes
 app.use('/api/v1/courses', coursesRoute);
-app.use('/api/v1/users', userRoute);        // includes signup/login/OTP routes
+app.use('/api/v1/users', userRoute); // includes signup/login/OTP routes
 app.use('/api/v1/news', newsRoute);
 app.use('/api/v1/studentWorks', studentWorkRoute);
 
