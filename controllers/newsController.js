@@ -8,49 +8,48 @@ exports.getAllNews = catchAsync(async (req, res, next) => {
   res.status(200).json({
     status: 'success',
     results: news.length,
-    data: {
-      news,
-    },
+    data: { news },
   });
 });
+
 exports.getNews = catchAsync(async (req, res, next) => {
-    const news = await News.findById(req.params.id);
-    if (!news) {
-        return next(new AppError('No news found with that ID', 404));
-    }
-    res.status(200).json({
-        status: 'success',
-        data: {
-        news,
-        },
-    });
-    }
-);
+  const news = await News.findById(req.params.id);
+  if (!news) {
+    return next(new AppError('No news found with that ID', 404));
+  }
+  res.status(200).json({
+    status: 'success',
+    data: { news },
+  });
+});
+
 exports.createNews = catchAsync(async (req, res, next) => {
+  const { title, description, image } = req.body;
+  if (!title || !description || !image) {
+    return next(new AppError('All fields are required', 400));
+  }
+
   const newNews = await News.create(req.body);
   res.status(201).json({
     status: 'success',
-    data: {
-      news: newNews,
-    },
+    data: { news: newNews },
   });
 });
+
 exports.updateNews = catchAsync(async (req, res, next) => {
   const news = await News.findByIdAndUpdate(req.params.id, req.body, {
     new: true,
     runValidators: true,
   });
-    if (!news) {
-        return next(new AppError('No news found with that ID', 404));
-    }
-    res.status(200).json({
-        status: 'success',
-        data: {
-            news,
-        },
-    });
-}
-);
+  if (!news) {
+    return next(new AppError('No news found with that ID', 404));
+  }
+  res.status(200).json({
+    status: 'success',
+    data: { news },
+  });
+});
+
 exports.deleteNews = catchAsync(async (req, res, next) => {
   const news = await News.findByIdAndDelete(req.params.id);
   if (!news) {
