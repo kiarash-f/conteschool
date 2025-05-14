@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
-const courseModel = require('./courseModel'); 
+const Course = require('./courseModel');
+const crypto = require('crypto');
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -17,17 +18,17 @@ const userSchema = new mongoose.Schema({
   phone: {
     type: String,
     required: [true, 'A user must have a phone number for OTP'],
-    unique: true
+    unique: true,
   },
   profilePicture: {
     type: String,
-    default: '' // store URL or filename
+    default: '', // store URL or filename
   },
   password: {
     type: String,
     required: [true, 'A user must have a password'],
     minlength: 6,
-    select: false // won't return password by default
+    select: false, // won't return password by default
   },
   passwordConfirm: {
     type: String,
@@ -48,47 +49,69 @@ const userSchema = new mongoose.Schema({
     {
       course: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Course'
+        ref: 'Course',
       },
       enrolledAt: {
         type: Date,
-        default: Date.now
+        default: Date.now,
       },
       paymentStatus: {
         type: String,
         enum: ['pending', 'paid', 'failed'],
-        default: 'pending'
+        default: 'pending',
       },
       reserved: {
         type: Boolean,
-        default: false
-      }
-    }
+        default: false,
+      },
+    },
   ],
   reviews: [
     {
       course: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Course'
+        ref: 'Course',
       },
       rating: {
         type: Number,
         min: 1,
-        max: 5
+        max: 5,
       },
       comment: String,
       createdAt: {
         type: Date,
-        default: Date.now
-      }
-    }
+        default: Date.now,
+      },
+    },
   ],
   createdAt: {
     type: Date,
     default: Date.now,
-  }
+  },
+  passwordResetToken: String,
+  passwordResetExpires: Date,
+  passwordChangedAt: Date,
 });
+userSchema.methods.createPasswordResetToken = function () {
+  const resetToken = crypto.randomBytes(32).toString('hex');
+  this.passwordResetToken = crypto
+    .createHash('sha256')
+    .update(resetToken)
+    .digest('hex');
+  this.passwordResetExpires = Date.now() + 10 * 60 * 1000; // 10 minutes
+  return resetToken;
+};
 
+userSchema.methods.changedPasswordAfter = function (JWTTimestamp) {
+  if (this.passwordChangedAt) {
+    const changedTimestamp = parseInt(
+      this.passwordChangedAt.getTime() / 1000,
+      10
+    );
+    return JWTTimestamp < changedTimestamp;
+  }
+  return false; // false means not changed
+};
 
 // Encrypt password before saving
 userSchema.pre('save', async function (next) {
@@ -98,7 +121,6 @@ userSchema.pre('save', async function (next) {
   this.passwordConfirm = undefined;
   next();
 });
-
 
 // Compare password method for login
 userSchema.methods.correctPassword = async function (
