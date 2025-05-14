@@ -2,9 +2,11 @@ const StudentWork = require('../models/studentWorkModel');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 
-
 exports.getAllStudentWorks = catchAsync(async (req, res, next) => {
-  const studentWorks = await StudentWork.find();
+  const studentWorks = await StudentWork.find().populate(
+    'student',
+    'name email'
+  );
   res.status(200).json({
     status: 'success',
     results: studentWorks.length,
@@ -14,7 +16,10 @@ exports.getAllStudentWorks = catchAsync(async (req, res, next) => {
   });
 });
 exports.getStudentWork = catchAsync(async (req, res, next) => {
-  const studentWork = await StudentWork.findById(req.params.id);
+  const studentWork = await StudentWork.findById(req.params.id).populate(
+    'student',
+    'name email'
+  );
   if (!studentWork) {
     return next(new AppError('No student work found with that ID', 404));
   }
@@ -35,21 +40,24 @@ exports.createStudentWork = catchAsync(async (req, res, next) => {
   });
 });
 exports.updateStudentWork = catchAsync(async (req, res, next) => {
-  const studentWork = await StudentWork.findByIdAndUpdate(req.params.id, req.body, {
-    new: true,
-    runValidators: true,
-  }); 
-    if (!studentWork) {
-        return next(new AppError('No student work found with that ID', 404));
+  const studentWork = await StudentWork.findByIdAndUpdate(
+    req.params.id,
+    req.body,
+    {
+      new: true,
+      runValidators: true,
     }
-    res.status(200).json({
-        status: 'success',
-        data: {
-            studentWork,
-        },
-    });
-}
-);
+  );
+  if (!studentWork) {
+    return next(new AppError('No student work found with that ID', 404));
+  }
+  res.status(200).json({
+    status: 'success',
+    data: {
+      studentWork,
+    },
+  });
+});
 exports.deleteStudentWork = catchAsync(async (req, res, next) => {
   const studentWork = await StudentWork.findByIdAndDelete(req.params.id);
   if (!studentWork) {
