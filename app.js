@@ -12,7 +12,7 @@ const app = express();
 /// ✅ Enable CORS
 app.use(
   cors({
-    origin: allowedOrigin,
+    origin: 'http://localhost:3000',
     credentials: true,
   })
 );
