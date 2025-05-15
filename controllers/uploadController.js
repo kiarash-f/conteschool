@@ -1,10 +1,12 @@
 const multer = require('multer');
 const path = require('path');
+const sharp = require('sharp');
+const fs = require('fs');
 
-// Storage destination and filename format
+// Multer storage
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, 'uploads/'); 
+    cb(null, 'uploads/');
   },
   filename: (req, file, cb) => {
     const ext = path.extname(file.originalname);
@@ -12,7 +14,7 @@ const storage = multer.diskStorage({
   }
 });
 
-// File type filter
+// File filter
 const fileFilter = (req, file, cb) => {
   const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
   if (allowedTypes.includes(file.mimetype)) {
@@ -22,9 +24,37 @@ const fileFilter = (req, file, cb) => {
   }
 };
 
+// Initialize multer
 const upload = multer({
   storage,
   fileFilter
 });
 
-module.exports = upload;
+// Compression middleware
+const compressImage = async (req, res, next) => {
+  if (!req.file) return next();
+
+  const inputPath = path.join(__dirname, '..', 'uploads', req.file.filename);
+  const compressedFilename = `compressed-${req.file.filename}`;
+  const outputPath = path.join(__dirname, '..', 'uploads', compressedFilename);
+
+  try {
+    await sharp(inputPath)
+      .resize({ width: 800 }) // Optional: resize
+      .jpeg({ quality: 80 }) // Compress
+      .toFile(outputPath);
+
+    fs.unlinkSync(inputPath); // Delete original
+
+    req.file.filename = compressedFilename; // Update filename in request
+    next();
+  } catch (err) {
+    console.error('Image compression error:', err);
+    next(err);
+  }
+};
+
+module.exports = {
+  upload,
+  compressImage
+};
