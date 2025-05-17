@@ -1,7 +1,5 @@
 const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
 const Course = require('./courseModel');
-const crypto = require('crypto');
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -23,22 +21,6 @@ const userSchema = new mongoose.Schema({
   profilePicture: {
     type: String,
     default: '', // store URL or filename
-  },
-  password: {
-    type: String,
-    required: [true, 'A user must have a password'],
-    minlength: 6,
-    select: false, // won't return password by default
-  },
-  passwordConfirm: {
-    type: String,
-    required: [true, 'A user must confirm the password'],
-    validate: {
-      validator: function (el) {
-        return el === this.password;
-      },
-      message: 'Passwords are not the same!',
-    },
   },
   role: {
     type: String,
@@ -88,47 +70,7 @@ const userSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
-  passwordResetToken: String,
-  passwordResetExpires: Date,
-  passwordChangedAt: Date,
 });
-userSchema.methods.createPasswordResetToken = function () {
-  const resetToken = crypto.randomBytes(32).toString('hex');
-  this.passwordResetToken = crypto
-    .createHash('sha256')
-    .update(resetToken)
-    .digest('hex');
-  this.passwordResetExpires = Date.now() + 10 * 60 * 1000; // 10 minutes
-  return resetToken;
-};
-
-userSchema.methods.changedPasswordAfter = function (JWTTimestamp) {
-  if (this.passwordChangedAt) {
-    const changedTimestamp = parseInt(
-      this.passwordChangedAt.getTime() / 1000,
-      10
-    );
-    return JWTTimestamp < changedTimestamp;
-  }
-  return false; // false means not changed
-};
-
-// Encrypt password before saving
-userSchema.pre('save', async function (next) {
-  if (!this.isModified('password')) return next();
-
-  this.password = await bcrypt.hash(this.password, 12);
-  this.passwordConfirm = undefined;
-  next();
-});
-
-// Compare password method for login
-userSchema.methods.correctPassword = async function (
-  candidatePassword,
-  userPassword
-) {
-  return await bcrypt.compare(candidatePassword, userPassword);
-};
 
 const User = mongoose.model('User', userSchema);
 module.exports = User;
