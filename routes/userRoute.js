@@ -4,15 +4,16 @@ const authController = require('../controllers/authController');
 
 const router = express.Router();
 
+// OTP Auth routes
+router.post('/send-otp', authController.sendOtp);
 router.post('/signup', authController.signup);
 router.post('/login', authController.login);
-router.post('/send-otp', authController.sendOtp);
-router.post('/forgot-password', authController.forgotPassword);
-router.patch('/reset-password/:token', authController.resetPassword);
-router.patch('/update-password', authController.protect, authController.updatePassword);
 
+// Protect all routes below this middleware
+router.use(authController.protect);
 
-router.route('/').get(userController.getAllUsers);
+// User data routes (protected)
+router.get('/', userController.getAllUsers);
 
 router
   .route('/:id')

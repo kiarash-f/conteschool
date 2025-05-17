@@ -26,7 +26,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"phone\": \"09121234567\"\n}"
+							"raw": "{\n//   \"phone\": \"09127119299\",\n  \"email\":\"kiarash@example.com\"\n}"
 						},
 						"url": {
 							"raw": "{{base_url}}/api/v1/users/send-otp",
@@ -56,7 +56,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"name\": \"Ali Rezaei\",\r\n  \"email\": \"ali@example.com\",\r\n  \"phone\": \"09121234567\",\r\n  \"password\": \"Test@1234\",\r\n  \"passwordConfirm\": \"Test@1234\",\r\n  \"otp\": \"389034\"  // Replace with actual OTP from console\r\n}",
+							"raw": "{\r\n  \"name\": \"Ali Rezaei\",\r\n  \"email\": \"user@example.com\",\r\n  \"phone\": \"09123456789\",\r\n  \"otp\": \"123456\"\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -91,7 +91,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"email\": \"ali@example.com\",\r\n  \"password\": \"newpass1234\"\r\n}",
+							"raw": "{\r\n  \"email\": \"kiarash@example.com\",\r\n//   \"phone\": \"09123456789\",\r\n  \"otp\": \"113240\"\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -133,98 +133,29 @@
 					"response": []
 				},
 				{
-					"name": "Forgot Password",
+					"name": "create Users",
 					"request": {
 						"method": "POST",
-						"header": [],
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"email\":\"ali@example.com\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
+							"raw": ""
 						},
 						"url": {
-							"raw": "{{base_url}}/api/v1/users/forgot-password",
+							"raw": "{{base_url}}/api/v1/users",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"api",
 								"v1",
-								"users",
-								"forgot-password"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Reset Password",
-					"request": {
-						"method": "PATCH",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n  \"password\": \"newpass1234\",\r\n  \"passwordConfirm\": \"newpass1234\"\r\n}\r\n",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{base_url}}/api/v1/users/reset-password/b6491041c8246573f4d258084234187b1b86130403689e195c0eea6ae03e2c5b",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"users",
-								"reset-password",
-								"b6491041c8246573f4d258084234187b1b86130403689e195c0eea6ae03e2c5b"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Update password",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MjM2NWIwMzliOTZjYjg2YjgyYzBkNiIsImlhdCI6MTc0NzIzMTkyMSwiZXhwIjoxNzQ3ODM2NzIxfQ.yv8F4MKwX4YFI3JnQrtuxEsT9i27gjwizVXALWbWJPo",
-									"type": "string"
-								}
-							]
-						},
-						"method": "PATCH",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n  \"currentPassword\": \"newpass1234\",\r\n  \"newPassword\": \"newpass4567\",\r\n  \"passwordConfirm\": \"newpass4567\"\r\n}\r\n",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{base_url}}/api/v1/users/update-password",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"users",
-								"update-password"
+								"users"
 							]
 						}
 					},
@@ -466,6 +397,230 @@
 								"v1",
 								"courses",
 								"682368eb2903843b9a5b5add"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "news",
+			"item": [
+				{
+					"name": "Get All news",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"ali@example.com\",\r\n  \"password\": \"newpass1234\"\r\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/news",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"news"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create News",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"title\": \"New Workshop Announced\",\r\n  \"description\": \"Join our exciting new workshop for kids this summer!\",\r\n  \"image\": \"https://yourdomain.com/images/workshop.jpg\"\r\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/news",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"news"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get News",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/news/6824abc63d377afd319d50a1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"news",
+								"6824abc63d377afd319d50a1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update News",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"title\": \"Updated News Title\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/news/6824abc63d377afd319d50a1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"news",
+								"6824abc63d377afd319d50a1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete News",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"ali@example.com\",\r\n  \"password\": \"newpass1234\"\r\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/news/6824abc63d377afd319d50a1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"news",
+								"6824abc63d377afd319d50a1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Student Work",
+			"item": [
+				{
+					"name": "Get All Student Work",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"title\": \"New Workshop Announced\",\r\n  \"description\": \"Join our exciting new workshop for kids this summer!\",\r\n  \"image\": \"https://yourdomain.com/images/workshop.jpg\"\r\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/studentWorks",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"studentWorks"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Student Work",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"title\": \"New Workshop Announced\",\r\n  \"description\": \"Join our exciting new workshop for kids this summer!\",\r\n  \"image\": \"https://yourdomain.com/images/workshop.jpg\"\r\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/studentWorks",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"studentWorks"
 							]
 						}
 					},
