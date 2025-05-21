@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const User = require('./userModel'); 
+const slugify = require('slugify');
 
 const courseSchema = new mongoose.Schema({
     name: {
@@ -7,6 +8,11 @@ const courseSchema = new mongoose.Schema({
         required: [true, 'A course must have a name'],
         unique: true,
         trim: true,
+    },
+    slug: {
+        type: String,
+        unique: true,
+        lowercase: true,
     },
     description: {
         type: String,
@@ -45,6 +51,11 @@ const courseSchema = new mongoose.Schema({
         type: Boolean,
         default: true // to toggle course visibility
     }
+});
+// Middleware to create a slug from the name before saving
+courseSchema.pre('save', function(next) {
+    this.slug = slugify(this.name, { lower: true });
+    next();
 });
 
 const Course = mongoose.model('Course', courseSchema);

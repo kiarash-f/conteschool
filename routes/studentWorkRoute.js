@@ -13,7 +13,7 @@ router
     authController.restrictTo('admin')
   );
 router
-  .route('/:id')
+  .route('/:slug')
   .get(studentWorkController.getStudentWork)
   .patch(
     studentWorkController.updateStudentWork,

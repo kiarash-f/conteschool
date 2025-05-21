@@ -13,7 +13,7 @@ exports.getAllNews = catchAsync(async (req, res, next) => {
 });
 
 exports.getNews = catchAsync(async (req, res, next) => {
-  const news = await News.findById(req.params.id);
+  const news = await News.findOne({ slug: req.params.slug });
   if (!news) {
     return next(new AppError('No news found with that ID', 404));
   }

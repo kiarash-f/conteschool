@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const User = require('./userModel');
+const slugify = require('slugify');
 
 const newsSchema = new mongoose.Schema({
   title: {
@@ -28,6 +29,11 @@ const newsSchema = new mongoose.Schema({
   },
 }, {
   timestamps: true
+});
+// Middleware to create a slug from the title before saving
+newsSchema.pre('save', function(next) {
+  this.slug = slugify(this.title, { lower: true });
+  next();
 });
 
 const News = mongoose.model('News', newsSchema);
