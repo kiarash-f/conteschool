@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const slugify = require('slugify');
 
 const studentWorkSchema = new mongoose.Schema({
   title: {
@@ -27,6 +28,11 @@ const studentWorkSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+});
+// Middleware to create a slug from the title before saving
+studentWorkSchema.pre('save', function (next) {
+  this.slug = slugify(this.title, { lower: true });
+  next();
 });
 
 const StudentWork = mongoose.model('StudentWork', studentWorkSchema);

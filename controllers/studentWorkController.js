@@ -16,7 +16,7 @@ exports.getAllStudentWorks = catchAsync(async (req, res, next) => {
   });
 });
 exports.getStudentWork = catchAsync(async (req, res, next) => {
-  const studentWork = await StudentWork.findById(req.params.id).populate(
+  const studentWork = await StudentWork.findOne({slug:req.params.slug}).populate(
     'student',
     'name email'
   );

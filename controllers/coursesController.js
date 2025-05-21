@@ -2,6 +2,7 @@ const APIFeatures = require('../utils/apiFeatures');
 const catchAsync = require('../utils/catchAsync');
 const Course = require('../models/courseModel');
 const upload = require('./uploadController');
+const AppError = require('../utils/appError');
 
 exports.getAllCourses = catchAsync(async (req, res, next) => {
   // Execute query
@@ -23,7 +24,7 @@ exports.getAllCourses = catchAsync(async (req, res, next) => {
   });
 });
 exports.getCourse = catchAsync(async (req, res, next) => {
-  const course = await Course.findById(req.params.id);
+  const course = await Course.findOne({ slug: req.params.slug });
 
   if (!course) {
     return next(new AppError('No course found with that ID', 404));
