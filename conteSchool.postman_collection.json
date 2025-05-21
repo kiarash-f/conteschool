@@ -56,7 +56,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"name\": \"Ali Rezaei\",\r\n  \"email\": \"user@example.com\",\r\n  \"phone\": \"09123456789\",\r\n  \"otp\": \"123456\"\r\n}\r\n",
+							"raw": "{\r\n  \"name\": \"kianRezaei\",\r\n  \"email\": \"kian@example.com\",\r\n  \"phone\": \"09123456788\",\r\n  \"otp\": \"620658\"\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -91,7 +91,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"email\": \"kiarash@example.com\",\r\n//   \"phone\": \"09123456789\",\r\n  \"otp\": \"113240\"\r\n}\r\n",
+							"raw": "{\r\n  \"email\": \"kiarash@example.com\",\r\n//   \"phone\": \"09123456789\",\r\n  \"otp\": \"937043\"\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -116,6 +116,16 @@
 				{
 					"name": "Get All Users",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MjRiZmUxMzQ4MWRiMDU0OTkxNTlhNiIsImlhdCI6MTc0NzgwOTkyOSwiZXhwIjoxNzQ4NDE0NzI5fQ.vUlBzYqzTZw2FeylpeCZlp-8Akd-8We43H5bl4ZLYBk",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
@@ -156,6 +166,36 @@
 								"api",
 								"v1",
 								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get User",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MjRiZmUxMzQ4MWRiMDU0OTkxNTlhNiIsImlhdCI6MTc0NzgwOTkyOSwiZXhwIjoxNzQ4NDE0NzI5fQ.vUlBzYqzTZw2FeylpeCZlp-8Akd-8We43H5bl4ZLYBk",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/users/6824bfe13481db05499159a6",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"6824bfe13481db05499159a6"
 							]
 						}
 					},
@@ -250,6 +290,16 @@
 						"disableBodyPruning": true
 					},
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MjRiZmUxMzQ4MWRiMDU0OTkxNTlhNiIsImlhdCI6MTc0NzgxMDg4MSwiZXhwIjoxNzQ4NDE1NjgxfQ.3zTgun07Byt0yKE7E77HZ9XKn-W4sM52YoWPYHdeFUg",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [
 							{
@@ -269,7 +319,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url}}/api/v1/courses/682368eb2903843b9a5b5add",
+							"raw": "{{base_url}}/api/v1/courses/test",
 							"host": [
 								"{{base_url}}"
 							],
@@ -277,7 +327,7 @@
 								"api",
 								"v1",
 								"courses",
-								"682368eb2903843b9a5b5add"
+								"test"
 							]
 						}
 					},
@@ -291,7 +341,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MjM2NWIwMzliOTZjYjg2YjgyYzBkNiIsImlhdCI6MTc0NzE1MDk1MywiZXhwIjoxNzQ3NzU1NzUzfQ.dTTD-YdNHKrxov-1Rctl13UTVCho7ooaonJ-NuUWti8",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MjRiZmUxMzQ4MWRiMDU0OTkxNTlhNiIsImlhdCI6MTc0NzgxMDg4MSwiZXhwIjoxNzQ4NDE1NjgxfQ.3zTgun07Byt0yKE7E77HZ9XKn-W4sM52YoWPYHdeFUg",
 									"type": "string"
 								}
 							]
@@ -300,13 +350,51 @@
 						"header": [
 							{
 								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
+								"value": "multipart/form-data",
+								"type": "text",
+								"disabled": true
 							}
 						],
 						"body": {
-							"mode": "raw",
-							"raw": "{\r\n  \"name\": \"Intro to Graphic Design\",\r\n  \"description\": \"A creative course for beginners in design.\",\r\n  \"duration\": 30,\r\n  \"price\": 99,\r\n  \"Image\": \"https://example.com/images/design-course.jpg\",\r\n  \"startDate\": \"2025-06-01T00:00:00.000Z\",\r\n  \"availableSeats\": 20\r\n}"
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "test ",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "test design",
+									"type": "text"
+								},
+								{
+									"key": "duration",
+									"value": "20",
+									"type": "text"
+								},
+								{
+									"key": "price",
+									"value": "100",
+									"type": "text"
+								},
+								{
+									"key": "image",
+									"contentType": "multipart/form-data",
+									"type": "file",
+									"src": "/C:/Users/USER/OneDrive/Desktop/contevisualschool/conteVisualArts/public/images/812798_23813-NURJJK.jpg"
+								},
+								{
+									"key": "startDate",
+									"value": "2025-06-01T00:00:00.000Z",
+									"type": "text"
+								},
+								{
+									"key": "availableSeats",
+									"value": "10",
+									"type": "text"
+								}
+							]
 						},
 						"url": {
 							"raw": "{{base_url}}/api/v1/courses",
