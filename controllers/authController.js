@@ -13,7 +13,7 @@ const signToken = (id) => {
   });
 };
 
-// Send OTP (for login or signup)
+// Send OTP
 exports.sendOtp = catchAsync(async (req, res, next) => {
   const { phone, email } = req.body;
 
@@ -22,30 +22,28 @@ exports.sendOtp = catchAsync(async (req, res, next) => {
   }
 
   const otp = Math.floor(100000 + Math.random() * 900000).toString();
-
   const key = phone || email;
+
   otpStore[key] = otp;
 
   console.log(`Mock OTP for ${key}: ${otp}`);
-
   res.json({ status: 'OTP sent successfully' });
 });
 
-// Signup with OTP
+// Signup with OTP (use same OTP from login)
 exports.signup = catchAsync(async (req, res, next) => {
   const { name, email, phone, otp } = req.body;
 
   const key = phone || email;
+
   if (!otpStore[key] || otpStore[key] !== otp) {
     return next(new AppError('Invalid or expired OTP', 400));
   }
+
+  // Remove OTP after using it
   delete otpStore[key];
 
-  const newUser = await User.create({
-    name,
-    email,
-    phone,
-  });
+  const newUser = await User.create({ name, email, phone });
 
   const token = signToken(newUser._id);
   res.status(201).json({
@@ -62,9 +60,11 @@ exports.login = catchAsync(async (req, res, next) => {
   const { phone, email, otp } = req.body;
 
   const key = phone || email;
+
   if (!otpStore[key] || otpStore[key] !== otp) {
     return next(new AppError('Invalid or expired OTP', 400));
   }
+
   delete otpStore[key];
 
   const user = await User.findOne(phone ? { phone } : { email });
