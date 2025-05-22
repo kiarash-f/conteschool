@@ -13,8 +13,8 @@ router
     authController.restrictTo('admin')
   );
 router
-  .route('/:slug')
-  .get(studentWorkController.getStudentWork)
+  .route('/:id')
+
   .patch(
     studentWorkController.updateStudentWork,
     authController.protect,
@@ -25,5 +25,6 @@ router
     authController.protect,
     authController.restrictTo('admin')
   );
+router.route('/:slug').get(studentWorkController.getStudentWork);
 
 module.exports = router;
