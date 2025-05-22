@@ -13,8 +13,8 @@ router
     authController.restrictTo('admin')
   );
 router
-  .route('/:slug')
-  .get(newsController.getNews)
+  .route('/:id')
+
   .patch(
     newsController.updateNews,
     authController.protect,
@@ -25,5 +25,6 @@ router
     authController.protect,
     authController.restrictTo('admin')
   );
+router.route('/:slug').get(newsController.getNews);
 
 module.exports = router;

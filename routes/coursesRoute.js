@@ -17,8 +17,7 @@ router.route('/').get(coursesController.getAllCourses).post(
 );
 
 router
-  .route('/:slug')
-  .get(coursesController.getCourse)
+  .route('/:id')
   .patch(
     coursesController.updateCourse,
     authController.protect,
@@ -29,5 +28,6 @@ router
     authController.protect,
     authController.restrictTo('admin')
   );
+router.route('/:slug').get(coursesController.getCourse);
 
 module.exports = router;
