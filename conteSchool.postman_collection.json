@@ -26,7 +26,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n//   \"phone\": \"09127119299\",\n  \"email\":\"kiarash@example.com\"\n}"
+							"raw": "{\n  \"phone\": \"09111856900\"\n}\n"
 						},
 						"url": {
 							"raw": "{{base_url}}/api/v1/users/send-otp",
@@ -56,7 +56,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"name\": \"kianRezaei\",\r\n  \"email\": \"kian@example.com\",\r\n  \"phone\": \"09123456788\",\r\n  \"otp\": \"620658\"\r\n}\r\n",
+							"raw": "{\r\n  \"name\": \"hasan\",\r\n  \"email\": \"hasan@email.com\",\r\n  \"phone\":\"09111856900\",\r\n  \"otp\": \"209803\"\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -91,7 +91,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"email\": \"kiarash@example.com\",\r\n//   \"phone\": \"09123456789\",\r\n  \"otp\": \"937043\"\r\n}\r\n",
+							"raw": "{\r\n//   \"email\": \"kiarash@example.com\",\r\n  \"phone\": \"09111856900\",\r\n  \"otp\": \"836638\"\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
