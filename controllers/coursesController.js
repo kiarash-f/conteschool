@@ -3,6 +3,7 @@ const catchAsync = require('../utils/catchAsync');
 const Course = require('../models/courseModel');
 const upload = require('./uploadController');
 const AppError = require('../utils/appError');
+const User = require('../models/userModel');
 
 exports.getAllCourses = catchAsync(async (req, res, next) => {
   // Execute query
@@ -83,6 +84,8 @@ exports.deleteCourse = catchAsync(async (req, res, next) => {
   });
 });
 exports.enrollStudent = catchAsync(async (req, res, next) => {
+  // console.log('req.body:', req.body);
+
   const { courseId, userId } = req.body;
 
   const course = await Course.findById(courseId);

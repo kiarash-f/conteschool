@@ -2,10 +2,15 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/userModel');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
-const crypto = require('crypto');
+// const crypto = require('crypto');
 const { promisify } = require('util');
-
-const otpStore = {};
+const {
+  generateOTP,
+  saveOTP,
+  verifyOTP,
+  clearOTP,
+  sendMockOTP,
+} = require('../utils/otp');
 
 const signToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -13,59 +18,75 @@ const signToken = (id) => {
   });
 };
 
-// Send OTP
-exports.sendOtp = catchAsync(async (req, res, next) => {
-  const { phone, email } = req.body;
-
-  if (!phone && !email) {
-    return next(new AppError('Please provide email or phone number', 400));
-  }
-
-  const otp = Math.floor(100000 + Math.random() * 900000).toString();
-  const key = phone || email;
-
-  otpStore[key] = otp;
-
-  console.log(`Mock OTP for ${key}: ${otp}`);
-  res.json({ status: 'OTP sent successfully' });
-});
-
-// Signup with OTP (use same OTP from login)
 exports.signup = catchAsync(async (req, res, next) => {
   const { name, email, phone, otp } = req.body;
-
   const key = phone || email;
 
-  if (!otpStore[key] || otpStore[key] !== otp) {
+  if (!key) {
+    return next(new AppError('Please provide phone or email', 400));
+  }
+
+  if (!otp) {
+    // STEP 1: Generate and send OTP
+    const generatedOtp = generateOTP();
+    saveOTP(key, generatedOtp);
+    sendMockOTP(key, generatedOtp);
+
+    return res.status(200).json({
+      status: 'success',
+      message: 'OTP sent. Please verify to complete signup.',
+    });
+  }
+
+  // STEP 2: Verify OTP
+  if (!verifyOTP(key, otp)) {
     return next(new AppError('Invalid or expired OTP', 400));
   }
 
-  // Remove OTP after using it
-  delete otpStore[key];
+  clearOTP(key);
+
+  // Check if user already exists (optional)
+  const existingUser = await User.findOne(phone ? { phone } : { email });
+  if (existingUser) {
+    return next(new AppError('User already exists. Please login.', 400));
+  }
 
   const newUser = await User.create({ name, email, phone });
-
   const token = signToken(newUser._id);
+
   res.status(201).json({
     status: 'success',
     token,
-    data: {
-      user: newUser,
-    },
+    data: { user: newUser },
   });
 });
-
 // Login with OTP
 exports.login = catchAsync(async (req, res, next) => {
-  const { phone, email, otp } = req.body;
-
+  const { email, phone, otp } = req.body;
   const key = phone || email;
 
-  if (!otpStore[key] || otpStore[key] !== otp) {
+  if (!key) {
+    return next(new AppError('Please provide phone or email', 400));
+  }
+
+  if (!otp) {
+    // STEP 1: Generate and send OTP
+    const generatedOtp = generateOTP();
+    saveOTP(key, generatedOtp);
+    sendMockOTP(key, generatedOtp);
+
+    return res.status(200).json({
+      status: 'success',
+      message: 'OTP sent. Please verify to complete login.',
+    });
+  }
+
+  // STEP 2: Verify OTP
+  if (!verifyOTP(key, otp)) {
     return next(new AppError('Invalid or expired OTP', 400));
   }
 
-  delete otpStore[key];
+  clearOTP(key);
 
   const user = await User.findOne(phone ? { phone } : { email });
   if (!user) {
@@ -73,15 +94,13 @@ exports.login = catchAsync(async (req, res, next) => {
   }
 
   const token = signToken(user._id);
+
   res.status(200).json({
     status: 'success',
     token,
-    data: {
-      user,
-    },
+    data: { user },
   });
 });
-
 // Protect routes
 exports.protect = catchAsync(async (req, res, next) => {
   let token;
@@ -108,7 +127,6 @@ exports.protect = catchAsync(async (req, res, next) => {
   req.user = currentUser;
   next();
 });
-
 // Restrict to roles
 exports.restrictTo = (...roles) => {
   return (req, res, next) => {

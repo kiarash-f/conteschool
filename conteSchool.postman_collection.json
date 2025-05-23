@@ -11,109 +11,6 @@
 			"name": "users",
 			"item": [
 				{
-					"name": "Send Otp",
-					"protocolProfileBehavior": {
-						"disabledSystemHeaders": {}
-					},
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n  \"phone\": \"09111856900\"\n}\n"
-						},
-						"url": {
-							"raw": "{{base_url}}/api/v1/users/send-otp",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"users",
-								"send-otp"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "signup",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n  \"name\": \"hasan\",\r\n  \"email\": \"hasan@email.com\",\r\n  \"phone\":\"09111856900\",\r\n  \"otp\": \"209803\"\r\n}\r\n",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{base_url}}/api/v1/users/signup",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"users",
-								"signup"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "login",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n//   \"email\": \"kiarash@example.com\",\r\n  \"phone\": \"09111856900\",\r\n  \"otp\": \"836638\"\r\n}\r\n",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{base_url}}/api/v1/users/login",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"users",
-								"login"
-							]
-						}
-					},
-					"response": []
-				},
-				{
 					"name": "Get All Users",
 					"request": {
 						"auth": {
@@ -121,7 +18,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MjRiZmUxMzQ4MWRiMDU0OTkxNTlhNiIsImlhdCI6MTc0NzgwOTkyOSwiZXhwIjoxNzQ4NDE0NzI5fQ.vUlBzYqzTZw2FeylpeCZlp-8Akd-8We43H5bl4ZLYBk",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MjRiZmUxMzQ4MWRiMDU0OTkxNTlhNiIsImlhdCI6MTc0Nzk4MTU2NiwiZXhwIjoxNzQ4NTg2MzY2fQ.0p1P7xMJaK6YhKsE76vPfam1DMNE9ZQGz2ZeucxV-Nk",
 									"type": "string"
 								}
 							]
@@ -137,6 +34,36 @@
 								"api",
 								"v1",
 								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get User",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MjRiZmUxMzQ4MWRiMDU0OTkxNTlhNiIsImlhdCI6MTc0NzgwOTkyOSwiZXhwIjoxNzQ4NDE0NzI5fQ.vUlBzYqzTZw2FeylpeCZlp-8Akd-8We43H5bl4ZLYBk",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/users/6824c61df93fdbc108266900",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"6824c61df93fdbc108266900"
 							]
 						}
 					},
@@ -172,22 +99,25 @@
 					"response": []
 				},
 				{
-					"name": "Get User",
+					"name": "Send Otp",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MjRiZmUxMzQ4MWRiMDU0OTkxNTlhNiIsImlhdCI6MTc0NzgwOTkyOSwiZXhwIjoxNzQ4NDE0NzI5fQ.vUlBzYqzTZw2FeylpeCZlp-8Akd-8We43H5bl4ZLYBk",
-									"type": "string"
-								}
-							]
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"phone\": \"09127119299\"\n}\n"
 						},
-						"method": "GET",
-						"header": [],
 						"url": {
-							"raw": "{{base_url}}/api/v1/users/6824bfe13481db05499159a6",
+							"raw": "{{base_url}}/api/v1/users/send-otp",
 							"host": [
 								"{{base_url}}"
 							],
@@ -195,7 +125,77 @@
 								"api",
 								"v1",
 								"users",
-								"6824bfe13481db05499159a6"
+								"send-otp"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "signup",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n \r\n  \"name\": \"Ali Reza\",\r\n  \"phone\": \"09123456789\",\r\n  \"email\":\"alirezaie@gmail.com\",\r\n\r\n  \"otp\": \"872377\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/users/signup",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"signup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\r\n  \"phone\": \"09127119299\",\r\n  \"otp\":\"289086\"\r\n  \r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/users/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"login"
 							]
 						}
 					},
@@ -206,6 +206,158 @@
 		{
 			"name": "courses",
 			"item": [
+				{
+					"name": "Create Course",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MjRiZmUxMzQ4MWRiMDU0OTkxNTlhNiIsImlhdCI6MTc0NzgxMDg4MSwiZXhwIjoxNzQ4NDE1NjgxfQ.3zTgun07Byt0yKE7E77HZ9XKn-W4sM52YoWPYHdeFUg",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "multipart/form-data",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "دوره طراحی خیار",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "test design",
+									"type": "text"
+								},
+								{
+									"key": "duration",
+									"value": "20",
+									"type": "text"
+								},
+								{
+									"key": "price",
+									"value": "100",
+									"type": "text"
+								},
+								{
+									"key": "image",
+									"contentType": "multipart/form-data",
+									"type": "file",
+									"src": "/C:/Users/USER/OneDrive/Desktop/localhost_5173_home (2).png"
+								},
+								{
+									"key": "startDate",
+									"value": "2025-06-01T00:00:00.000Z",
+									"type": "text"
+								},
+								{
+									"key": "availableSeats",
+									"value": "10",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/courses",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"courses"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Student To Course",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"courseId\": \"682e3275ef3eecd9a03aaf2f\",\r\n  \"userId\": \"683011f7ff3f040646aa1efd\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/courses/enroll",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"courses",
+								"enroll"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update courses",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MjRiZmUxMzQ4MWRiMDU0OTkxNTlhNiIsImlhdCI6MTc0Nzk4MDI3MiwiZXhwIjoxNzQ4NTg1MDcyfQ.15oNuEyMSjv9fV5-nW3PH2o8YDdmmCYlt4aJAKi2ZHs",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\":\"test 2\",\r\n    \"duration\": 55,\r\n    \"enrolledStudents\":\"682dd030f83b65bc65afdf08\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/courses/682e3275ef3eecd9a03aaf2f",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"courses",
+								"682e3275ef3eecd9a03aaf2f"
+							]
+						}
+					},
+					"response": []
+				},
 				{
 					"name": "Get All Courses",
 					"event": [
@@ -241,7 +393,7 @@
 					"response": []
 				},
 				{
-					"name": "student who bought the courses",
+					"name": "Get All Student In a Course",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -266,10 +418,10 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"name\": \"Intro to Graphic Design\",\r\n  \"description\": \"A creative course for beginners in design.\",\r\n  \"duration\": 30,\r\n  \"price\": 99,\r\n  \"Image\": \"https://example.com/images/design-course.jpg\",\r\n  \"startDate\": \"2025-06-01T00:00:00.000Z\",\r\n  \"availableSeats\": 20\r\n}"
+							"raw": ""
 						},
 						"url": {
-							"raw": "{{base_url}}/api/v1/courses/682368eb2903843b9a5b5add/enrolled-students",
+							"raw": "{{base_url}}/api/v1/courses/682e3275ef3eecd9a03aaf2f/enrolled-students",
 							"host": [
 								"{{base_url}}"
 							],
@@ -277,7 +429,7 @@
 								"api",
 								"v1",
 								"courses",
-								"682368eb2903843b9a5b5add",
+								"682e3275ef3eecd9a03aaf2f",
 								"enrolled-students"
 							]
 						}
@@ -334,149 +486,22 @@
 					"response": []
 				},
 				{
-					"name": "Create Course",
+					"name": "Delete Courses",
 					"request": {
 						"auth": {
 							"type": "bearer",
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MjRiZmUxMzQ4MWRiMDU0OTkxNTlhNiIsImlhdCI6MTc0NzgxMDg4MSwiZXhwIjoxNzQ4NDE1NjgxfQ.3zTgun07Byt0yKE7E77HZ9XKn-W4sM52YoWPYHdeFUg",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MjRiZmUxMzQ4MWRiMDU0OTkxNTlhNiIsImlhdCI6MTc0NzkzMDU0MSwiZXhwIjoxNzQ4NTM1MzQxfQ.RVeW1EsBXjzhaBTxE_xiLeie-BFUmDfzoiRHPkrgWX4",
 									"type": "string"
 								}
 							]
 						},
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "multipart/form-data",
-								"type": "text",
-								"disabled": true
-							}
-						],
-						"body": {
-							"mode": "formdata",
-							"formdata": [
-								{
-									"key": "name",
-									"value": "test ",
-									"type": "text"
-								},
-								{
-									"key": "description",
-									"value": "test design",
-									"type": "text"
-								},
-								{
-									"key": "duration",
-									"value": "20",
-									"type": "text"
-								},
-								{
-									"key": "price",
-									"value": "100",
-									"type": "text"
-								},
-								{
-									"key": "image",
-									"contentType": "multipart/form-data",
-									"type": "file",
-									"src": "/C:/Users/USER/OneDrive/Desktop/contevisualschool/conteVisualArts/public/images/812798_23813-NURJJK.jpg"
-								},
-								{
-									"key": "startDate",
-									"value": "2025-06-01T00:00:00.000Z",
-									"type": "text"
-								},
-								{
-									"key": "availableSeats",
-									"value": "10",
-									"type": "text"
-								}
-							]
-						},
-						"url": {
-							"raw": "{{base_url}}/api/v1/courses",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"courses"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Update courses",
-					"request": {
-						"method": "PATCH",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n  \"price\": 129,\r\n  \"availableSeats\": 15,\r\n  \"isActive\": false\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{base_url}}/api/v1/courses/682368eb2903843b9a5b5add",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"courses",
-								"682368eb2903843b9a5b5add"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "handle student enroll course",
-					"request": {
-						"method": "PATCH",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "",
-								"type": "text",
-								"disabled": true
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n  \"courseId\": \"COURSE_ID_HERE\",\r\n  \"userId\": \"USER_ID_HERE\"\r\n}"
-						},
-						"url": {
-							"raw": "{{base_url}}/api/v1/courses/enroll",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"courses",
-								"enroll"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Delete Courses",
-					"request": {
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{base_url}}/api/v1/courses/682368eb2903843b9a5b5add",
+							"raw": "{{base_url}}/api/v1/courses/682d8afa07815bdbf4a4c368",
 							"host": [
 								"{{base_url}}"
 							],
@@ -484,7 +509,7 @@
 								"api",
 								"v1",
 								"courses",
-								"682368eb2903843b9a5b5add"
+								"682d8afa07815bdbf4a4c368"
 							]
 						}
 					},
