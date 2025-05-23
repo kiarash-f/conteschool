@@ -28,6 +28,7 @@ router
     authController.protect,
     authController.restrictTo('admin')
   );
-router.route('/:slug').get(coursesController.getCourse);
+router.route('/:id').get(coursesController.getCourse);
+
 
 module.exports = router;

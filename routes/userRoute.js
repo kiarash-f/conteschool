@@ -4,15 +4,11 @@ const authController = require('../controllers/authController');
 
 const router = express.Router();
 
-// OTP Auth routes
-router.post('/send-otp', authController.sendOtp);
 router.post('/signup', authController.signup);
 router.post('/login', authController.login);
 
-// Protect all routes below this middleware
 router.use(authController.protect);
 
-// User data routes (protected)
 router.get('/', userController.getAllUsers);
 
 router
