@@ -11,6 +11,8 @@ router.use(authController.protect);
 
 router.get('/', userController.getAllUsers);
 
+router.get('/me', authController.getMe, userController.getUser);
+
 router
   .route('/:id')
   .get(userController.getUser)
