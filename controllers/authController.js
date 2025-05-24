@@ -18,49 +18,6 @@ const signToken = (id) => {
   });
 };
 
-exports.signup = catchAsync(async (req, res, next) => {
-  const { name, email, phone, otp } = req.body;
-  const key = phone || email;
-
-  if (!key) {
-    return next(new AppError('Please provide phone or email', 400));
-  }
-
-  if (!otp) {
-    // STEP 1: Generate and send OTP
-    const generatedOtp = generateOTP();
-    saveOTP(key, generatedOtp);
-    sendMockOTP(key, generatedOtp);
-
-    return res.status(200).json({
-      status: 'success',
-      message: 'OTP sent. Please verify to complete signup.',
-    });
-  }
-
-  // STEP 2: Verify OTP
-  if (!verifyOTP(key, otp)) {
-    return next(new AppError('Invalid or expired OTP', 400));
-  }
-
-  clearOTP(key);
-
-  // Check if user already exists (optional)
-  const existingUser = await User.findOne(phone ? { phone } : { email });
-  if (existingUser) {
-    return next(new AppError('User already exists. Please login.', 400));
-  }
-
-  const newUser = await User.create({ name, email, phone });
-  const token = signToken(newUser._id);
-
-  res.status(201).json({
-    status: 'success',
-    token,
-    data: { user: newUser },
-  });
-});
-// Login with OTP
 exports.login = catchAsync(async (req, res, next) => {
   const { email, phone, otp } = req.body;
   const key = phone || email;
@@ -86,12 +43,15 @@ exports.login = catchAsync(async (req, res, next) => {
     return next(new AppError('Invalid or expired OTP', 400));
   }
 
-  clearOTP(key);
-
+  // Check if user exists
   const user = await User.findOne(phone ? { phone } : { email });
   if (!user) {
+    // Do NOT clear OTP — allow reuse for signup
     return next(new AppError('User not found. Please sign up first.', 404));
   }
+
+  // Login successful → now clear OTP
+  clearOTP(key);
 
   const token = signToken(user._id);
 
@@ -101,6 +61,49 @@ exports.login = catchAsync(async (req, res, next) => {
     data: { user },
   });
 });
+
+exports.signup = catchAsync(async (req, res, next) => {
+  const { name, email, phone, otp } = req.body;
+  const key = phone || email;
+
+  if (!key) {
+    return next(new AppError('Please provide phone or email', 400));
+  }
+
+  if (!otp) {
+    const generatedOtp = generateOTP();
+    saveOTP(key, generatedOtp);
+    sendMockOTP(key, generatedOtp);
+
+    return res.status(200).json({
+      status: 'success',
+      message: 'OTP sent. Please verify to complete signup.',
+    });
+  }
+
+  if (!verifyOTP(key, otp)) {
+    return next(new AppError('Invalid or expired OTP', 400));
+  }
+
+  // Check if user already exists
+  const existingUser = await User.findOne(phone ? { phone } : { email });
+  if (existingUser) {
+    return next(new AppError('User already exists. Please login.', 400));
+  }
+
+  // Signup success → now clear OTP
+  clearOTP(key);
+
+  const newUser = await User.create({ name, email, phone });
+  const token = signToken(newUser._id);
+
+  res.status(201).json({
+    status: 'success',
+    token,
+    data: { user: newUser },
+  });
+});
+
 // Protect routes
 exports.protect = catchAsync(async (req, res, next) => {
   let token;
