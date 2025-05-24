@@ -200,6 +200,49 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Get Me",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MjRiZmUxMzQ4MWRiMDU0OTkxNTlhNiIsImlhdCI6MTc0ODEwMDkxMCwiZXhwIjoxNzQ4NzA1NzEwfQ.G7ROJ5tOrdMLeiGj5Ws8dDyPK73F9SKzQlX97DgJtTk",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\r\n  \"phone\": \"09127119299\",\r\n  \"otp\":\"289086\"\r\n  \r\n}\r\n"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/users/me",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"me"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
