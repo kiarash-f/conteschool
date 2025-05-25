@@ -2,7 +2,6 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/userModel');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
-// const crypto = require('crypto');
 const { promisify } = require('util');
 const {
   generateOTP,
@@ -11,6 +10,7 @@ const {
   clearOTP,
   sendMockOTP,
 } = require('../utils/otp');
+// const crypto = require('crypto');
 
 const signToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -101,6 +101,17 @@ exports.signup = catchAsync(async (req, res, next) => {
     status: 'success',
     token,
     data: { user: newUser },
+  });
+});
+exports.logout = catchAsync(async (req, res, next) => {
+  res.cookie('jwt', 'loggedout', {
+    expires: new Date(Date.now() + 10 * 1000), // 10 seconds
+    httpOnly: true,
+    // secure: process.env.NODE_ENV === 'production',
+  });
+  res.status(200).json({
+    status: 'success',
+    message: 'Logged out successfully',
   });
 });
 
