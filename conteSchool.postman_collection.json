@@ -144,7 +144,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n \r\n  \"name\": \"Ali Reza\",\r\n  \"phone\": \"09123456789\",\r\n  \"email\":\"alirezaie@gmail.com\",\r\n\r\n  \"otp\": \"872377\"\r\n}\r\n",
+							"raw": "{\r\n \r\n  \"name\": \"Ali Rezaaa\",\r\n  \"phone\": \"09127119298\",\r\n  \"email\":\"alirezaieeee@gmail.com\",\r\n\r\n  \"otp\": \"358788\"\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -179,7 +179,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n\r\n  \"phone\": \"09127119299\",\r\n  \"otp\":\"289086\"\r\n  \r\n}\r\n",
+							"raw": "{\r\n\r\n  \"phone\": \"09127119298\",\r\n  \"otp\":\"358788\"\r\n  \r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -239,6 +239,36 @@
 								"v1",
 								"users",
 								"me"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logout",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MzFlYzdjNTNkOTczMTQ5NWQ4MGJlMCIsImlhdCI6MTc0ODE1OTc0MCwiZXhwIjoxNzQ4NzY0NTQwfQ.Wlb1afrMzhymR_MtMGaAYT-AHtarrh5GdKaOk8um8ds",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/users/logout",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"logout"
 							]
 						}
 					},
