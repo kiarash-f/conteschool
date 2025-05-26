@@ -18,7 +18,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MjRiZmUxMzQ4MWRiMDU0OTkxNTlhNiIsImlhdCI6MTc0Nzk4MTU2NiwiZXhwIjoxNzQ4NTg2MzY2fQ.0p1P7xMJaK6YhKsE76vPfam1DMNE9ZQGz2ZeucxV-Nk",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MjRiZmUxMzQ4MWRiMDU0OTkxNTlhNiIsImlhdCI6MTc0ODI3NDc3OCwiZXhwIjoxNzQ4ODc5NTc4fQ.JmQs0clLIS3-_8yg7nmChMmHTaN4QcncXhu0YSvLcR4",
 									"type": "string"
 								}
 							]
@@ -47,7 +47,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MjRiZmUxMzQ4MWRiMDU0OTkxNTlhNiIsImlhdCI6MTc0NzgwOTkyOSwiZXhwIjoxNzQ4NDE0NzI5fQ.vUlBzYqzTZw2FeylpeCZlp-8Akd-8We43H5bl4ZLYBk",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MjRiZmUxMzQ4MWRiMDU0OTkxNTlhNiIsImlhdCI6MTc0ODI3NDc3OCwiZXhwIjoxNzQ4ODc5NTc4fQ.JmQs0clLIS3-_8yg7nmChMmHTaN4QcncXhu0YSvLcR4",
 									"type": "string"
 								}
 							]
@@ -55,7 +55,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{base_url}}/api/v1/users/6824c61df93fdbc108266900",
+							"raw": "{{base_url}}/api/v1/users/68322cf75071f73dffff35cd",
 							"host": [
 								"{{base_url}}"
 							],
@@ -63,7 +63,7 @@
 								"api",
 								"v1",
 								"users",
-								"6824c61df93fdbc108266900"
+								"68322cf75071f73dffff35cd"
 							]
 						}
 					},
@@ -179,7 +179,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n\r\n  \"phone\": \"09127119298\",\r\n  \"otp\":\"358788\"\r\n  \r\n}\r\n",
+							"raw": "{\r\n\r\n  \"phone\": \"09127119299\",\r\n  \"otp\":\"850705\"\r\n  \r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -357,42 +357,6 @@
 					"response": []
 				},
 				{
-					"name": "Add Student To Course",
-					"request": {
-						"method": "PATCH",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "",
-								"type": "text",
-								"disabled": true
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n  \"courseId\": \"682e3275ef3eecd9a03aaf2f\",\r\n  \"userId\": \"683011f7ff3f040646aa1efd\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{base_url}}/api/v1/courses/enroll",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"courses",
-								"enroll"
-							]
-						}
-					},
-					"response": []
-				},
-				{
 					"name": "Update courses",
 					"request": {
 						"auth": {
@@ -511,20 +475,7 @@
 				},
 				{
 					"name": "Get Course",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MjRiZmUxMzQ4MWRiMDU0OTkxNTlhNiIsImlhdCI6MTc0NzgxMDg4MSwiZXhwIjoxNzQ4NDE1NjgxfQ.3zTgun07Byt0yKE7E77HZ9XKn-W4sM52YoWPYHdeFUg",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
 						"header": [
 							{
@@ -534,17 +485,8 @@
 								"disabled": true
 							}
 						],
-						"body": {
-							"mode": "raw",
-							"raw": "",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
 						"url": {
-							"raw": "{{base_url}}/api/v1/courses/test",
+							"raw": "{{base_url}}/api/v1/courses/68345f4318cfa37b3d4218b2",
 							"host": [
 								"{{base_url}}"
 							],
@@ -552,7 +494,7 @@
 								"api",
 								"v1",
 								"courses",
-								"test"
+								"68345f4318cfa37b3d4218b2"
 							]
 						}
 					},
@@ -583,6 +525,37 @@
 								"v1",
 								"courses",
 								"682d8afa07815bdbf4a4c368"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Payment Link",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MzFlYzdjNTNkOTczMTQ5NWQ4MGJlMCIsImlhdCI6MTc0ODI1OTM2OSwiZXhwIjoxNzQ4ODY0MTY5fQ.KEapsk6RN2Z8nhpT-HcyaOW8OnIV3_XAbvDHvlZWCZg",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/courses/request-link/682e3275ef3eecd9a03aaf2f",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"courses",
+								"request-link",
+								"682e3275ef3eecd9a03aaf2f"
 							]
 						}
 					},
