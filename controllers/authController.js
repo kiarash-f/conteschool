@@ -9,15 +9,15 @@ const {
   verifyOTP,
   clearOTP,
   sendMockOTP,
-} = require('../utils/otp');
-// const crypto = require('crypto');
+  sendSMS,
+  sendVerificationCode,
+} = require('../utils/sms');
 
 const signToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRES_IN,
   });
 };
-
 exports.login = catchAsync(async (req, res, next) => {
   const { email, phone, otp } = req.body;
   const key = phone || email;
@@ -30,7 +30,23 @@ exports.login = catchAsync(async (req, res, next) => {
     // STEP 1: Generate and send OTP
     const generatedOtp = generateOTP();
     saveOTP(key, generatedOtp);
-    sendMockOTP(key, generatedOtp);
+
+    try {
+      if (phone) {
+        if (process.env.NODE_ENV === 'development') {
+          sendMockOTP(phone, generatedOtp); // Log to console only
+        } else {
+          await sendVerificationCode(phone, generatedOtp); // Kavenegar verified template
+        }
+      } else {
+        sendMockOTP(email, generatedOtp); // For email (mock for now)
+      }
+    } catch (err) {
+      console.error('SMS sending error:', err);
+      return next(
+        new AppError('خطا در ارسال پیامک. لطفاً دوباره تلاش کنید.', 500)
+      );
+    }
 
     return res.status(200).json({
       status: 'success',
@@ -43,14 +59,13 @@ exports.login = catchAsync(async (req, res, next) => {
     return next(new AppError('Invalid or expired OTP', 400));
   }
 
-  // Check if user exists
+  // STEP 3: Check user existence
   const user = await User.findOne(phone ? { phone } : { email });
   if (!user) {
-    // Do NOT clear OTP — allow reuse for signup
     return next(new AppError('User not found. Please sign up first.', 404));
   }
 
-  // Login successful → now clear OTP
+  // STEP 4: Clear OTP after successful login
   clearOTP(key);
 
   const token = signToken(user._id);
@@ -61,7 +76,6 @@ exports.login = catchAsync(async (req, res, next) => {
     data: { user },
   });
 });
-
 exports.signup = catchAsync(async (req, res, next) => {
   const { name, email, phone, otp } = req.body;
   const key = phone || email;
@@ -114,7 +128,6 @@ exports.logout = catchAsync(async (req, res, next) => {
     message: 'Logged out successfully',
   });
 });
-
 // Protect routes
 exports.protect = catchAsync(async (req, res, next) => {
   let token;
