@@ -28,6 +28,11 @@ const verifyOTP = (key, otp) => {
 const clearOTP = (key) => {
   delete otpStore[key];
 };
+// Mock function to simulate sending OTP for email
+const sendMockOTP = (key, otp) => {
+  console.log(`Mock OTP sent to ${key}: ${otp}`);
+};
+
 
 const message = new MessageWay(process.env.MESSAGEWAY_API_KEY);
 
@@ -49,10 +54,6 @@ const sendOtpSMS = async (phone) => {
   }
 };
 
-// Mock function to simulate sending OTP for email
-const sendMockOTP = (key, otp) => {
-  console.log(`Mock OTP sent to ${key}: ${otp}`);
-};
 
 module.exports = {
   generateOTP,

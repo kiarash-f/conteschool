@@ -36,7 +36,9 @@ exports.login = catchAsync(async (req, res, next) => {
       }
     } catch (err) {
       console.error('SMS sending error:', err);
-      return next(new AppError('خطا در ارسال پیامک. لطفاً دوباره تلاش کنید.', 500));
+      return next(
+        new AppError('خطا در ارسال پیامک. لطفاً دوباره تلاش کنید.', 500)
+      );
     }
 
     return res.status(200).json({
@@ -45,7 +47,7 @@ exports.login = catchAsync(async (req, res, next) => {
     });
   }
 
-  // ✅ Verify OTP using MessageWay
+  //  Verify OTP using MessageWay
   if (phone) {
     try {
       await message.verify({
@@ -58,7 +60,7 @@ exports.login = catchAsync(async (req, res, next) => {
     }
   }
 
-  // ✅ Check user existence
+  //  Check user existence
   const user = await User.findOne(phone ? { phone } : { email });
   if (!user) {
     return next(new AppError('User not found. Please sign up first.', 404));
@@ -74,36 +76,17 @@ exports.login = catchAsync(async (req, res, next) => {
 });
 exports.signup = catchAsync(async (req, res, next) => {
   const { name, email, phone, otp } = req.body;
-  const key = phone || email;
 
-  if (!key) {
-    return next(new AppError('Please provide phone or email', 400));
+  if (!email && !phone) {
+    return next(new AppError('Please provide either phone or email', 400));
   }
-
-  if (!otp) {
-    const generatedOtp = generateOTP();
-    saveOTP(key, generatedOtp);
-    sendMockOTP(key, generatedOtp);
-
-    return res.status(200).json({
-      status: 'success',
-      message: 'OTP sent. Please verify to complete signup.',
-    });
-  }
-
-  if (!verifyOTP(key, otp)) {
-    return next(new AppError('Invalid or expired OTP', 400));
-  }
-
   // Check if user already exists
   const existingUser = await User.findOne(phone ? { phone } : { email });
   if (existingUser) {
     return next(new AppError('User already exists. Please login.', 400));
   }
 
-  // Signup success → now clear OTP
-  clearOTP(key);
-
+  // Create new user
   const newUser = await User.create({ name, email, phone });
   const token = signToken(newUser._id);
 
@@ -113,6 +96,7 @@ exports.signup = catchAsync(async (req, res, next) => {
     data: { user: newUser },
   });
 });
+
 exports.logout = catchAsync(async (req, res, next) => {
   res.cookie('jwt', 'loggedout', {
     expires: new Date(Date.now() + 10 * 1000), // 10 seconds
