@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const Course = require('./courseModel');
+const Review = require('./reviewModel');
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -48,24 +49,14 @@ const userSchema = new mongoose.Schema({
       },
     },
   ],
-  reviews: [
+  reviews: 
     {
       course: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Course',
-      },
-      rating: {
-        type: Number,
-        min: 1,
-        max: 5,
-      },
-      comment: String,
-      createdAt: {
-        type: Date,
-        default: Date.now,
-      },
-    },
-  ],
+        ref: 'Review',
+      }}
+     
+  ,
   createdAt: {
     type: Date,
     default: Date.now,

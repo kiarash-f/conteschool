@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const User = require('./userModel'); 
 const slugify = require('slugify');
+const Review = require('./reviewModel'); // Assuming you have a review model
 
 const courseSchema = new mongoose.Schema({
     name: {
@@ -50,7 +51,11 @@ const courseSchema = new mongoose.Schema({
     isActive: {
         type: Boolean,
         default: true // to toggle course visibility
-    }
+    },
+    review: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Review'
+    },
 });
 // Middleware to create a slug from the name before saving
 courseSchema.pre('save', function(next) {

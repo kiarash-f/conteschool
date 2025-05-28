@@ -8,6 +8,7 @@ const userRoute = require('./routes/userRoute');
 const newsRoute = require('./routes/newsRoute');
 const studentWorkRoute = require('./routes/studentWorkRoute');
 const sitemapRoutes = require('./routes/sitemapRoutes');
+const reviewRoute = require('./routes/reviewRoute');
 
 const app = express();
 
@@ -42,5 +43,6 @@ app.use('/api/v1/courses', coursesRoute);
 app.use('/api/v1/users', userRoute); 
 app.use('/api/v1/news', newsRoute);
 app.use('/api/v1/studentWorks', studentWorkRoute);
+app.use('/api/v1/reviews', reviewRoute);
 
 module.exports = app;
