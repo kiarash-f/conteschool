@@ -4,13 +4,14 @@ const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 const { promisify } = require('util');
 const {
-  generateOTP,
-  saveOTP,
-  verifyOTP,
-  clearOTP,
+  // generateOTP,
+  // saveOTP,
+  // verifyOTP,
+  // clearOTP,
   sendMockOTP,
-  sendSMS,
-  sendVerificationCode,
+  sendOtpSMS,
+  message,
+  // otpStore,
 } = require('../utils/sms');
 
 const signToken = (id) => {
@@ -27,25 +28,15 @@ exports.login = catchAsync(async (req, res, next) => {
   }
 
   if (!otp) {
-    // STEP 1: Generate and send OTP
-    const generatedOtp = generateOTP();
-    saveOTP(key, generatedOtp);
-
     try {
       if (phone) {
-        if (process.env.NODE_ENV === 'development') {
-          sendMockOTP(phone, generatedOtp); // Log to console only
-        } else {
-          await sendVerificationCode(phone, generatedOtp); // Kavenegar verified template
-        }
+        await sendOtpSMS(phone); // MessageWay generates & sends OTP
       } else {
-        sendMockOTP(email, generatedOtp); // For email (mock for now)
+        sendMockOTP(email, '000000'); // Fallback for email (mock)
       }
     } catch (err) {
       console.error('SMS sending error:', err);
-      return next(
-        new AppError('خطا در ارسال پیامک. لطفاً دوباره تلاش کنید.', 500)
-      );
+      return next(new AppError('خطا در ارسال پیامک. لطفاً دوباره تلاش کنید.', 500));
     }
 
     return res.status(200).json({
@@ -54,19 +45,24 @@ exports.login = catchAsync(async (req, res, next) => {
     });
   }
 
-  // STEP 2: Verify OTP
-  if (!verifyOTP(key, otp)) {
-    return next(new AppError('Invalid or expired OTP', 400));
+  // ✅ Verify OTP using MessageWay
+  if (phone) {
+    try {
+      await message.verify({
+        mobile: phone,
+        otp,
+      });
+    } catch (error) {
+      console.error('OTP verification failed:', error);
+      return next(new AppError('Invalid or expired OTP', 400));
+    }
   }
 
-  // STEP 3: Check user existence
+  // ✅ Check user existence
   const user = await User.findOne(phone ? { phone } : { email });
   if (!user) {
     return next(new AppError('User not found. Please sign up first.', 404));
   }
-
-  // STEP 4: Clear OTP after successful login
-  clearOTP(key);
 
   const token = signToken(user._id);
 
