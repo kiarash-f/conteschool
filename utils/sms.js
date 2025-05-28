@@ -1,9 +1,8 @@
-const Kavenegar = require('kavenegar');
+// const Kavenegar = require('kavenegar');
 const dotenv = require('dotenv');
 dotenv.config({ path: './config.env' });
+const { MessageWay, isMessageWayError } = require('messageway');
 
-console.log('Loaded API key:', process.env.KAVENEGAR_API_KEY);
-console.log('Sender:', process.env.KAVENEGAR_SENDER);
 const otpStore = {};
 
 // Generate 6-digit OTP
@@ -30,34 +29,26 @@ const clearOTP = (key) => {
   delete otpStore[key];
 };
 
-// Send verification code using Kavenegar
-const api = Kavenegar.KavenegarApi({
-  apikey: process.env.KAVENEGAR_API_KEY,
-});
+const message = new MessageWay(process.env.MESSAGEWAY_API_KEY);
 
-const sendVerificationCode = (phone, code) => {
-  return new Promise((resolve, reject) => {
-    api.VerifyLookup(
-      {
-        receptor: `0${phone.replace(/^98/, '')}`,
-        token: code,
-        template: process.env.KAVENEGAR_TEMPLATE_NAME,
-      },
-      (response, status) => {
-        console.log('Kavenegar status:', status);
-        console.log('Kavenegar response:', response);
-
-        if (status !== 200) {
-          return reject(
-            new Error('خطا در ارسال پیامک. لطفاً دوباره تلاش کنید.')
-          );
-        }
-
-        resolve(response);
-      }
-    );
-  });
+const sendOtpSMS = async (phone) => {
+  try {
+    const referenceID = await message.sendSMS({
+      mobile: `${phone}`,
+      templateID: 15472,
+      length: 6,
+      expireTime: 120,
+      method: 'sms',
+      // params: ['1234'], // Use if your SMS template needs variables
+    });
+    console.log('SMS sent. Reference ID:', referenceID);
+    return referenceID;
+  } catch (error) {
+    console.error('Error sending SMS:', error);
+    throw error;
+  }
 };
+
 // Mock function to simulate sending OTP for email
 const sendMockOTP = (key, otp) => {
   console.log(`Mock OTP sent to ${key}: ${otp}`);
@@ -69,5 +60,7 @@ module.exports = {
   verifyOTP,
   clearOTP,
   sendMockOTP,
-  sendVerificationCode,
+  sendOtpSMS,
+  otpStore,
+  message,
 };
