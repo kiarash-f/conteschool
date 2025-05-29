@@ -18,7 +18,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MjRiZmUxMzQ4MWRiMDU0OTkxNTlhNiIsImlhdCI6MTc0ODI3NDc3OCwiZXhwIjoxNzQ4ODc5NTc4fQ.JmQs0clLIS3-_8yg7nmChMmHTaN4QcncXhu0YSvLcR4",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MjRiZmUxMzQ4MWRiMDU0OTkxNTlhNiIsImlhdCI6MTc0ODQ5ODAyMiwiZXhwIjoxNzQ5MTAyODIyfQ.QGxNNPrb59Wg5Zm9waKnB8isBjXjv2xo9B0h0XKgFcM",
 									"type": "string"
 								}
 							]
@@ -47,7 +47,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MjRiZmUxMzQ4MWRiMDU0OTkxNTlhNiIsImlhdCI6MTc0ODI3NDc3OCwiZXhwIjoxNzQ4ODc5NTc4fQ.JmQs0clLIS3-_8yg7nmChMmHTaN4QcncXhu0YSvLcR4",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MjRiZmUxMzQ4MWRiMDU0OTkxNTlhNiIsImlhdCI6MTc0ODQ5ODAyMiwiZXhwIjoxNzQ5MTAyODIyfQ.QGxNNPrb59Wg5Zm9waKnB8isBjXjv2xo9B0h0XKgFcM",
 									"type": "string"
 								}
 							]
@@ -55,7 +55,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{base_url}}/api/v1/users/68322cf75071f73dffff35cd",
+							"raw": "{{base_url}}/api/v1/users/6824bfe13481db05499159a6",
 							"host": [
 								"{{base_url}}"
 							],
@@ -63,7 +63,7 @@
 								"api",
 								"v1",
 								"users",
-								"68322cf75071f73dffff35cd"
+								"6824bfe13481db05499159a6"
 							]
 						}
 					},
@@ -144,7 +144,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n \r\n  \"name\": \"Ali Rezaaa\",\r\n  \"phone\": \"09127119298\",\r\n  \"email\":\"alirezaieeee@gmail.com\",\r\n\r\n  \"otp\": \"358788\"\r\n}\r\n",
+							"raw": "{\r\n \r\n  \"name\": \"shahab\",\r\n  \"phone\": \"09022119299\",\r\n  \"email\":\"shahab@gmail.com\",\r\n\r\n\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -252,7 +252,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MzFlYzdjNTNkOTczMTQ5NWQ4MGJlMCIsImlhdCI6MTc0ODE1OTc0MCwiZXhwIjoxNzQ4NzY0NTQwfQ.Wlb1afrMzhymR_MtMGaAYT-AHtarrh5GdKaOk8um8ds",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MjRiZmUxMzQ4MWRiMDU0OTkxNTlhNiIsImlhdCI6MTc0ODQxODI0NiwiZXhwIjoxNzQ5MDIzMDQ2fQ._smkEfAFJJu76tGeJ9zjOe5FQfqiFIXW4KH-Iqxcdao",
 									"type": "string"
 								}
 							]
@@ -780,6 +780,172 @@
 								"api",
 								"v1",
 								"studentWorks"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Review",
+			"item": [
+				{
+					"name": "Get All Reviews",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/reviews",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"reviews"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get review",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MjRiZmUxMzQ4MWRiMDU0OTkxNTlhNiIsImlhdCI6MTc0ODQxODI0NiwiZXhwIjoxNzQ5MDIzMDQ2fQ._smkEfAFJJu76tGeJ9zjOe5FQfqiFIXW4KH-Iqxcdao",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/reviews/2234567890987654345678909876543",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"reviews",
+								"2234567890987654345678909876543"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Review",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MjRiZmUxMzQ4MWRiMDU0OTkxNTlhNiIsImlhdCI6MTc0ODQ0NzQ4NSwiZXhwIjoxNzQ5MDUyMjg1fQ.ri9EzHVCV2l-p40F4s0SNRJSIv7fhJPrLmaZx6e78tQ",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"review\":\"test review\",\r\n    \"rating\":5,\r\n    \"courseId\":\"68345f4318cfa37b3d4218b2\"\r\n    \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/reviews",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"reviews"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Review",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MjRiZmUxMzQ4MWRiMDU0OTkxNTlhNiIsImlhdCI6MTc0ODQxODI0NiwiZXhwIjoxNzQ5MDIzMDQ2fQ._smkEfAFJJu76tGeJ9zjOe5FQfqiFIXW4KH-Iqxcdao",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"review\":\"test review\",\r\n    \"rating\":5,\r\n    \"createdAt\":2025,\r\n    \"user\":\"userId\",\r\n    \"course\":\"courseId\"\r\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/reviews/68373291b75f811e382ffd44",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"reviews",
+								"68373291b75f811e382ffd44"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Review",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MjRiZmUxMzQ4MWRiMDU0OTkxNTlhNiIsImlhdCI6MTc0ODQxODI0NiwiZXhwIjoxNzQ5MDIzMDQ2fQ._smkEfAFJJu76tGeJ9zjOe5FQfqiFIXW4KH-Iqxcdao",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"review\":\"test review\",\r\n    \"rating\":5,\r\n    \"createdAt\":2025,\r\n    \"user\":\"userId\",\r\n    \"course\":\"courseId\"\r\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/reviews/jgdkuteuydyidiydydiydiydiy",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"reviews",
+								"jgdkuteuydyidiydydiydiydiy"
 							]
 						}
 					},

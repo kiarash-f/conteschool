@@ -49,19 +49,25 @@ const userSchema = new mongoose.Schema({
       },
     },
   ],
-  reviews: 
-    {
-      course: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Review',
-      }}
+ 
      
-  ,
+  
   createdAt: {
     type: Date,
     default: Date.now,
   },
 });
+
+userSchema.virtual('reviews', {
+  ref: 'Review',
+  foreignField: 'user',
+  localField: '_id'
+});
+
+userSchema.set('toObject', { virtuals: true });
+userSchema.set('toJSON', { virtuals: true });
+
+
 
 const User = mongoose.model('User', userSchema);
 module.exports = User;
