@@ -24,7 +24,14 @@ exports.getAllUsers = catchAsync(async (req, res, next) => {
   });
 });
 exports.getUser = catchAsync(async (req, res, next) => {
-  const user = await User.findById(req.params.id).populate('enrolledCourses');
+  const user = await User.findById(req.params.id).populate({
+      path: 'reviews',
+      populate: {
+        path: 'course',
+        select: 'name image'
+      }
+    })
+    .populate('enrolledCourses.course');
   if (!user) {
     return next(new AppError('No user found with that ID', 404));
   }
