@@ -14,8 +14,10 @@ exports.getAllCourses = catchAsync(async (req, res, next) => {
     .sort()
     .limitFields()
     .paginate();
-
-  const courses = await features.query;
+  const courses = await features.query.populate({
+    path: 'reviews',
+    populate: { path: 'user' },
+  });
 
   // Send response
   res.status(200).json({
