@@ -1,23 +1,25 @@
-const mongoose = require('mongoose');
-const request = require('supertest');
-const app = require('../app');
+const puppeteer = require('puppeteer');
 
-beforeAll(async () => {
-  process.env.NODE_ENV = 'test';
-  await mongoose.connect(process.env.DATABASE, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  });
+let page;
+let browser;
+
+beforeEach(async () => {
+  browser = await puppeteer.launch({ headless: false });
+  page = await browser.newPage();
+  await page.goto('http://localhost:5173');
 });
 
-afterAll(async () => {
-  await mongoose.connection.close();
+afterEach(async () => {
+  await browser.close();
 });
 
-describe('GET /api/v1/courses', () => {
-  it('should return all courses', async () => {
-    const res = await request(app).get('/api/v1/courses');
-    expect(res.statusCode).toBe(200);
-    expect(res.body.status).toBe('success');
-  }, 10000); // increase timeout
+test('make sure logo exist', async () => {
+  const text = await page.$eval('.mb-6', (el) => el.textContent);
+
+  expect(text).toEqual('دوره های پرطرفدار');
+});
+
+test('when sighned in log out button apewar',async()=>{
+const id ='6824b7c2c411611c670366d4';
+const buffer = require('safe-buffer').buffer;
 });

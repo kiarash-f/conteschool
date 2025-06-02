@@ -47,7 +47,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MjRiZmUxMzQ4MWRiMDU0OTkxNTlhNiIsImlhdCI6MTc0ODQ5ODAyMiwiZXhwIjoxNzQ5MTAyODIyfQ.QGxNNPrb59Wg5Zm9waKnB8isBjXjv2xo9B0h0XKgFcM",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MjRiZmUxMzQ4MWRiMDU0OTkxNTlhNiIsImlhdCI6MTc0ODU4NzQ3OSwiZXhwIjoxNzQ5MTkyMjc5fQ.1gUp7ilRuPcod5iZPpm1m61raJSUUOLT4Wat855TkNc",
 									"type": "string"
 								}
 							]
@@ -269,6 +269,45 @@
 								"v1",
 								"users",
 								"logout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update User",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4M2QzYjM1NGM0OWQzYzJmNmZmODkyZCIsImlhdCI6MTc0ODg0MzMxNywiZXhwIjoxNzQ5NDQ4MTE3fQ.9z8x2I-gFmt-pRVk8G_lnv7ZeszXqfgkkXrAypWl7X0",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\":\"kia72@gmail.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/users/683d3b354c49d3c2f6ff892d",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"683d3b354c49d3c2f6ff892d"
 							]
 						}
 					},
