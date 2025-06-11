@@ -41,10 +41,11 @@ exports.getReview = catchAsync(async (req, res, next) => {
 });
 
 exports.createReview = catchAsync(async (req, res, next) => {
-  const { review, rating, courseId } = req.body;
+  const { review, rating} = req.body;
+  const {courseId}  = req.params;
 
-  if (!review || !rating || !courseId) {
-    return next(new AppError('Please provide review, rating and course ID', 400));
+  if (!review || !rating ) {
+    return next(new AppError('Please provide review, rating ', 400));
   }
 
   // Check if course exists
