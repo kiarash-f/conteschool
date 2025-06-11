@@ -32,7 +32,7 @@ router
     authController.protect,
     authController.restrictTo('admin'),
     upload.single('image'),
-    coursesController.updateCourse,
+    coursesController.updateCourse
   )
   .delete(
     coursesController.deleteCourse,

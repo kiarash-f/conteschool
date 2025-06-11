@@ -50,7 +50,7 @@ exports.createCourse = catchAsync(async (req, res, next) => {
     return next(new AppError('Please upload an image for the course', 400));
   }
 
-  req.body.Image = req.file.filename;
+  req.body.Image = `http://localhost:3000/uploads/${req.file.filename}`;
 
   const newCourse = await Course.create(req.body);
 
