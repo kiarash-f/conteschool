@@ -29,9 +29,10 @@ router
   .route('/:id')
   .get(coursesController.getCourse)
   .patch(
-    coursesController.updateCourse,
     authController.protect,
-    authController.restrictTo('admin')
+    authController.restrictTo('admin'),
+    upload.single('image'),
+    coursesController.updateCourse,
   )
   .delete(
     coursesController.deleteCourse,

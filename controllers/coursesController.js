@@ -62,6 +62,11 @@ exports.createCourse = catchAsync(async (req, res, next) => {
   });
 });
 exports.updateCourse = catchAsync(async (req, res, next) => {
+  if (!req.file) {
+    return next(new AppError('Please upload an image for the course', 400));
+  }
+
+  req.body.Image = req.file.filename;
   const course = await Course.findByIdAndUpdate(req.params.id, req.body, {
     new: true,
     runValidators: true,
@@ -253,3 +258,7 @@ exports.confirmPayment = catchAsync(async (req, res, next) => {
 });
 //TODO: Implement sendSMS function
 //TODO: postman for verify token and confirm payment
+//TODO: implement aggregate rating, multer for patch user
+//TODO: voice review, codify course model for sub-courses
+//TODO: link send to user for payment, payment method
+//TODO: api for email LIARA, delete the useless routes
