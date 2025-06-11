@@ -62,24 +62,30 @@ exports.createCourse = catchAsync(async (req, res, next) => {
   });
 });
 exports.updateCourse = catchAsync(async (req, res, next) => {
-  if (!req.file) {
-    return next(new AppError('Please upload an image for the course', 400));
-  }
-
-  req.body.Image = req.file.filename;
-  const course = await Course.findByIdAndUpdate(req.params.id, req.body, {
-    new: true,
-    runValidators: true,
-  });
+  const course = await Course.findById(req.params.id);
 
   if (!course) {
     return next(new AppError('No course found with that ID', 404));
   }
 
+  if (req.file) {
+    req.body.Image = req.file.filename;
+  } else {
+  }
+
+  const updatedCourse = await Course.findByIdAndUpdate(
+    req.params.id,
+    req.body,
+    {
+      new: true,
+      runValidators: true,
+    }
+  );
+
   res.status(200).json({
     status: 'success',
     data: {
-      course,
+      course: updatedCourse,
     },
   });
 });
