@@ -151,7 +151,6 @@ exports.getEnrolledStudents = catchAsync(async (req, res, next) => {
     },
   });
 });
-
 //TODO: Implement muck payment link generation and confirmation
 // POST /api/courses/:courseId/request-payment-link
 exports.requestPaymentLink = catchAsync(async (req, res, next) => {

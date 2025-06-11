@@ -50,6 +50,16 @@ const courseSchema = new mongoose.Schema({
       ref: 'User',
     },
   ],
+  ratingsAverage: {
+    type: Number,
+    default: 4.5,
+    min: [1, 'Rating must be above 1.0'],
+    max: [5, 'Rating must be below 5.0'],
+},
+ratingsQuantity: {
+    type: Number,
+    default: 0,
+},
   isActive: {
     type: Boolean,
     default: true, // to toggle course visibility
