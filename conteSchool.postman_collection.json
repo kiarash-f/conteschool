@@ -18,7 +18,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MjRiZmUxMzQ4MWRiMDU0OTkxNTlhNiIsImlhdCI6MTc0ODQ5ODAyMiwiZXhwIjoxNzQ5MTAyODIyfQ.QGxNNPrb59Wg5Zm9waKnB8isBjXjv2xo9B0h0XKgFcM",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MjRiZmUxMzQ4MWRiMDU0OTkxNTlhNiIsImlhdCI6MTc0OTQ1MjU1MSwiZXhwIjoxNzUwMDU3MzUxfQ.4SMHhfWQeCyPUH-oqiDNF2daPF9FV9PK0conhoD1kjI",
 									"type": "string"
 								}
 							]
@@ -144,7 +144,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n \r\n  \"name\": \"shahab\",\r\n  \"phone\": \"09022119299\",\r\n  \"email\":\"shahab@gmail.com\",\r\n\r\n\r\n}\r\n",
+							"raw": "{\r\n \r\n  \"name\": \"kia\",\r\n  \"phone\": \"09022119299\",\r\n  \"email\":\"kia@gmail.com\"\r\n\r\n\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -179,7 +179,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n\r\n  \"phone\": \"09127119299\",\r\n  \"otp\":\"850705\"\r\n  \r\n}\r\n",
+							"raw": "{\r\n    \"phone\": \"09127119299\",\r\n\r\n    // \"method\": \"sms\",\r\n    // \"templateID\": 15472\r\n    \"otp\":\"223452\"\r\n\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -403,7 +403,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MjRiZmUxMzQ4MWRiMDU0OTkxNTlhNiIsImlhdCI6MTc0Nzk4MDI3MiwiZXhwIjoxNzQ4NTg1MDcyfQ.15oNuEyMSjv9fV5-nW3PH2o8YDdmmCYlt4aJAKi2ZHs",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MjRiZmUxMzQ4MWRiMDU0OTkxNTlhNiIsImlhdCI6MTc0OTYyMjM2MiwiZXhwIjoxNzUwMjI3MTYyfQ.u8hpMadIiwTN-Og4sOCpwW65mzGru-v4-347ZZP0Uy8",
 									"type": "string"
 								}
 							]
@@ -411,16 +411,23 @@
 						"method": "PATCH",
 						"header": [],
 						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"name\":\"test 2\",\r\n    \"duration\": 55,\r\n    \"enrolledStudents\":\"682dd030f83b65bc65afdf08\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "changed",
+									"type": "text"
+								},
+								{
+									"key": "image",
+									"contentType": "multipart/form-data",
+									"type": "file",
+									"src": "/C:/Users/USER/OneDrive/Pictures/tai-bui-8yK2GuwTVWs-unsplash.jpg"
 								}
-							}
+							]
 						},
 						"url": {
-							"raw": "{{base_url}}/api/v1/courses/682e3275ef3eecd9a03aaf2f",
+							"raw": "{{base_url}}/api/v1/courses/683a9f399538b5e523d33c67",
 							"host": [
 								"{{base_url}}"
 							],
@@ -428,7 +435,7 @@
 								"api",
 								"v1",
 								"courses",
-								"682e3275ef3eecd9a03aaf2f"
+								"683a9f399538b5e523d33c67"
 							]
 						}
 					},
@@ -886,7 +893,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MjRiZmUxMzQ4MWRiMDU0OTkxNTlhNiIsImlhdCI6MTc0ODQ0NzQ4NSwiZXhwIjoxNzQ5MDUyMjg1fQ.ri9EzHVCV2l-p40F4s0SNRJSIv7fhJPrLmaZx6e78tQ",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MjRiZmUxMzQ4MWRiMDU0OTkxNTlhNiIsImlhdCI6MTc0OTY1MzEyOCwiZXhwIjoxNzUwMjU3OTI4fQ.0UoSa6Ag0nLK6ztbE8aDVnNiRSF1dv4I_lWiPVbAyY0",
 									"type": "string"
 								}
 							]
@@ -901,7 +908,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"review\":\"test review\",\r\n    \"rating\":5,\r\n    \"courseId\":\"68345f4318cfa37b3d4218b2\"\r\n    \r\n}",
+							"raw": "{\r\n    \"review\":\"test 1 review\",\r\n    \"rating\":2\r\n    \r\n    \r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -909,13 +916,15 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url}}/api/v1/reviews",
+							"raw": "{{base_url}}/api/v1/reviews/683a9ea99538b5e523d33c5f/reviews",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"api",
 								"v1",
+								"reviews",
+								"683a9ea99538b5e523d33c5f",
 								"reviews"
 							]
 						}
