@@ -24,7 +24,6 @@ exports.getAllReviews = catchAsync(async (req, res, next) => {
     },
   });
 });
-
 exports.getReview = catchAsync(async (req, res, next) => {
   const review = await Review.findById(req.params.id).populate('User Course');
 
@@ -39,7 +38,6 @@ exports.getReview = catchAsync(async (req, res, next) => {
     },
   });
 });
-
 exports.createReview = catchAsync(async (req, res, next) => {
   const { review, rating} = req.body;
   const {courseId}  = req.params;
@@ -76,7 +74,6 @@ exports.createReview = catchAsync(async (req, res, next) => {
     });
 }
 );
-
 exports.updateReview = catchAsync(async (req, res, next) => {
   const { review, rating } = req.body;
 
@@ -101,7 +98,6 @@ exports.updateReview = catchAsync(async (req, res, next) => {
     },
   });
 });
-
 exports.deleteReview = catchAsync(async (req, res, next) => {
   const review = await Review.findByIdAndDelete(req.params.id);
 
