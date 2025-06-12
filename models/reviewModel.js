@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const User = require('./userModel');
 
 const reviewSchema = new mongoose.Schema({
+ 
   review: {
     type: String,
     required: [true, 'Please provide a review'],
@@ -65,12 +66,13 @@ reviewSchema.post('save', function () {
 });
 
 reviewSchema.pre(/^findOneAnd/, async function (next) {
-  this.review = await this.findOne();
+  this.r = await this.model.findOne(this.getFilter()); // this.r = document
   next();
 });
+
 reviewSchema.post(/^findOneAnd/, async function () {
-  if (this.review) {
-    this.review.constructor.calcAverageRatings(this.review.course);
+  if (this.r) {
+    await this.r.constructor.calcAverageRatings(this.r.course);
   }
 });
 reviewSchema.pre(/^find/, function (next) {

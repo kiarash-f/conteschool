@@ -179,7 +179,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"phone\": \"09127119299\",\r\n\r\n    // \"method\": \"sms\",\r\n    // \"templateID\": 15472\r\n    \"otp\":\"223452\"\r\n\r\n}\r\n",
+							"raw": "{\r\n    \"phone\": \"09127119299\",\r\n\r\n    // \"method\": \"sms\",\r\n    // \"templateID\": 15472\r\n    \"otp\":\"882255\"\r\n\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -403,7 +403,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MjRiZmUxMzQ4MWRiMDU0OTkxNTlhNiIsImlhdCI6MTc0OTYyMjM2MiwiZXhwIjoxNzUwMjI3MTYyfQ.u8hpMadIiwTN-Og4sOCpwW65mzGru-v4-347ZZP0Uy8",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MjRiZmUxMzQ4MWRiMDU0OTkxNTlhNiIsImlhdCI6MTc0OTY1NDIyMCwiZXhwIjoxNzUwMjU5MDIwfQ.c51chcVhcwQix-gtXj7zDXwiu9T44aQ9jYU8mdjsW94",
 									"type": "string"
 								}
 							]
@@ -414,20 +414,14 @@
 							"mode": "formdata",
 							"formdata": [
 								{
-									"key": "name",
-									"value": "changed",
+									"key": "enrolledStudents",
+									"value": "6824bfe13481db05499159a6",
 									"type": "text"
-								},
-								{
-									"key": "image",
-									"contentType": "multipart/form-data",
-									"type": "file",
-									"src": "/C:/Users/USER/OneDrive/Pictures/tai-bui-8yK2GuwTVWs-unsplash.jpg"
 								}
 							]
 						},
 						"url": {
-							"raw": "{{base_url}}/api/v1/courses/683a9f399538b5e523d33c67",
+							"raw": "{{base_url}}/api/v1/courses/684a7b95340b42a678173f1c",
 							"host": [
 								"{{base_url}}"
 							],
@@ -435,7 +429,7 @@
 								"api",
 								"v1",
 								"courses",
-								"683a9f399538b5e523d33c67"
+								"684a7b95340b42a678173f1c"
 							]
 						}
 					},
@@ -460,6 +454,17 @@
 					"request": {
 						"method": "GET",
 						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "enrolledStudents",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
 						"url": {
 							"raw": "{{base_url}}/api/v1/courses",
 							"host": [
@@ -602,6 +607,93 @@
 								"courses",
 								"request-link",
 								"682e3275ef3eecd9a03aaf2f"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Enrolled Student For One Course",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MjRiZmUxMzQ4MWRiMDU0OTkxNTlhNiIsImlhdCI6MTc0OTczOTcyNiwiZXhwIjoxNzUwMzQ0NTI2fQ.3_dC05ncAU_H_kigUmrkMHlzpDNA2b-z2u2Q_uHfwBM",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/courses/68345f4318cfa37b3d4218b2/enrolled-students",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"courses",
+								"68345f4318cfa37b3d4218b2",
+								"enrolled-students"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Enrolled Students For All The Courses",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MjRiZmUxMzQ4MWRiMDU0OTkxNTlhNiIsImlhdCI6MTc0OTczOTcyNiwiZXhwIjoxNzUwMzQ0NTI2fQ.3_dC05ncAU_H_kigUmrkMHlzpDNA2b-z2u2Q_uHfwBM",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/courses/enrolled-students",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"courses",
+								"enrolled-students"
 							]
 						}
 					},
@@ -908,7 +1000,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"review\":\"test 1 review\",\r\n    \"rating\":2\r\n    \r\n    \r\n}",
+							"raw": "{\r\n    \"title\":\"دوره کالیگرافی\" ,\r\n    \"review\":\"دوره بسیار خوب و جامعی بود و من از کلاس و استاد بسیار یاد گرفتم\",\r\n    \"rating\":4\r\n    \r\n    \r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -916,7 +1008,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url}}/api/v1/reviews/683a9ea99538b5e523d33c5f/reviews",
+							"raw": "{{base_url}}/api/v1/reviews/684a7b95340b42a678173f1c/reviews",
 							"host": [
 								"{{base_url}}"
 							],
@@ -924,7 +1016,7 @@
 								"api",
 								"v1",
 								"reviews",
-								"683a9ea99538b5e523d33c5f",
+								"684a7b95340b42a678173f1c",
 								"reviews"
 							]
 						}
@@ -946,10 +1038,6 @@
 						},
 						"method": "DELETE",
 						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"review\":\"test review\",\r\n    \"rating\":5,\r\n    \"createdAt\":2025,\r\n    \"user\":\"userId\",\r\n    \"course\":\"courseId\"\r\n}"
-						},
 						"url": {
 							"raw": "{{base_url}}/api/v1/reviews/68373291b75f811e382ffd44",
 							"host": [
@@ -973,7 +1061,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MjRiZmUxMzQ4MWRiMDU0OTkxNTlhNiIsImlhdCI6MTc0ODQxODI0NiwiZXhwIjoxNzQ5MDIzMDQ2fQ._smkEfAFJJu76tGeJ9zjOe5FQfqiFIXW4KH-Iqxcdao",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MjRiZmUxMzQ4MWRiMDU0OTkxNTlhNiIsImlhdCI6MTc0OTczOTcyNiwiZXhwIjoxNzUwMzQ0NTI2fQ.3_dC05ncAU_H_kigUmrkMHlzpDNA2b-z2u2Q_uHfwBM",
 									"type": "string"
 								}
 							]
@@ -982,10 +1070,15 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"review\":\"test review\",\r\n    \"rating\":5,\r\n    \"createdAt\":2025,\r\n    \"user\":\"userId\",\r\n    \"course\":\"courseId\"\r\n}"
+							"raw": "{\r\n    \"review\":\"test review\",\r\n    \"rating\":5\r\n    \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
 						},
 						"url": {
-							"raw": "{{base_url}}/api/v1/reviews/jgdkuteuydyidiydydiydiydiy",
+							"raw": "{{base_url}}/api/v1/reviews/684a8154cd934478a9826c7b",
 							"host": [
 								"{{base_url}}"
 							],
@@ -993,7 +1086,7 @@
 								"api",
 								"v1",
 								"reviews",
-								"jgdkuteuydyidiydydiydiydiy"
+								"684a8154cd934478a9826c7b"
 							]
 						}
 					},
