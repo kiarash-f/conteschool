@@ -46,11 +46,15 @@ exports.getCourse = catchAsync(async (req, res, next) => {
   });
 });
 exports.createCourse = catchAsync(async (req, res, next) => {
-  if (!req.file) {
-    return next(new AppError('Please upload an image for the course', 400));
+  if (req.files['Image'] && req.files['Image'][0]) {
+    req.body.Image = `http://localhost:3000/uploads/${req.files['Image'][0].filename}`;
   }
 
-  req.body.Image = `http://localhost:3000/uploads/${req.file.filename}`;
+  if (req.files['courseImages']) {
+    req.body.courseImages = req.files['courseImages'].map(
+      (file) => `http://localhost:3000/uploads/${file.filename}`
+    );
+  }
 
   const newCourse = await Course.create(req.body);
 
@@ -101,45 +105,7 @@ exports.deleteCourse = catchAsync(async (req, res, next) => {
     data: null,
   });
 });
-// exports.enrollStudent = catchAsync(async (req, res, next) => {
-//   // console.log('req.body:', req.body);
 
-//   const { courseId, userId } = req.body;
-
-//   const course = await Course.findById(courseId);
-//   const user = await User.findById(userId);
-
-//   if (!course || !user) {
-//     return next(new AppError('User or Course not found', 404));
-//   }
-
-//   if (course.availableSeats <= 0) {
-//     return next(new AppError('No available seats for this course', 400));
-//   }
-
-//   // Prevent duplicate enrollment
-//   if (course.enrolledStudents.includes(userId)) {
-//     return next(new AppError('User already enrolled in this course', 400));
-//   }
-
-//   // Update course
-//   course.enrolledStudents.push(userId);
-//   course.availableSeats -= 1;
-//   await course.save();
-
-//   // Update user
-//   user.enrolledCourses.push(courseId);
-//   await user.save();
-
-//   res.status(200).json({
-//     status: 'success',
-//     message: 'User enrolled in course',
-//     data: {
-//       course,
-//       user,
-//     },
-//   });
-// });
 exports.getEnrolledStudents = catchAsync(async (req, res, next) => {
   const course = await Course.findById(req.params.id).populate({
     path: 'enrolledStudents',
@@ -264,14 +230,6 @@ exports.confirmPayment = catchAsync(async (req, res, next) => {
     message: 'Payment confirmed and course added to profile',
   });
 });
-//TODO: Implement sendSMS function
-//TODO: postman for verify token and confirm payment
-
-//TODO: voice review, codify course model for sub-courses
-//TODO: link send to user for payment, payment method
-//TODO: api for email LIARA, delete the useless routes
-
-//TODO: Implement muck payment link generation and confirmation
 
 exports.getAllEnrolledStudents = catchAsync(async (req, res, next) => {
   const students = await User.find({
@@ -284,3 +242,10 @@ exports.getAllEnrolledStudents = catchAsync(async (req, res, next) => {
     data: { students },
   });
 });
+
+//TODO: Implement sendSMS function
+//TODO: postman for verify token and confirm payment
+//TODO: voice review, codify course model for sub-courses
+//TODO: link send to user for payment, payment method
+//TODO: api for email LIARA, delete the useless routes
+//TODO: Implement muck payment link generation and confirmation

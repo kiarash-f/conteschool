@@ -1,11 +1,10 @@
 const express = require('express');
 const coursesController = require('../controllers/coursesController');
 const authController = require('../controllers/authController');
-const upload = require('../controllers/uploadController');
+const { courseUpload } = require('../controllers/uploadController'); // Updated import
 
 const router = express.Router();
 
-// router.patch('/enroll', coursesController.enrollStudent);
 router.get('/enrolled-students', coursesController.getAllEnrolledStudents);
 router.get('/:id/enrolled-students', coursesController.getEnrolledStudents);
 router.post(
@@ -22,7 +21,7 @@ router
   .post(
     authController.protect,
     authController.restrictTo('admin'),
-    upload.single('image'),
+    courseUpload,
     coursesController.createCourse
   );
 
@@ -32,7 +31,7 @@ router
   .patch(
     authController.protect,
     authController.restrictTo('admin'),
-    upload.single('image'),
+    courseUpload, 
     coursesController.updateCourse
   )
   .delete(
