@@ -6,6 +6,7 @@ const upload = require('../controllers/uploadController');
 const router = express.Router();
 
 // router.patch('/enroll', coursesController.enrollStudent);
+router.get('/enrolled-students', coursesController.getAllEnrolledStudents);
 router.get('/:id/enrolled-students', coursesController.getEnrolledStudents);
 router.post(
   '/request-link/:courseId',

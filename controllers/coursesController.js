@@ -141,9 +141,12 @@ exports.deleteCourse = catchAsync(async (req, res, next) => {
 //   });
 // });
 exports.getEnrolledStudents = catchAsync(async (req, res, next) => {
-  const course = await Course.findById(req.params.id).populate(
-    'enrolledStudents'
-  );
+  const course = await Course.findById(req.params.id).populate({
+    path: 'enrolledStudents',
+    populate: {
+      path: 'enrolledCourses', // field in User model
+    },
+  });
 
   if (!course) {
     return next(new AppError('Course not found', 404));
@@ -157,7 +160,7 @@ exports.getEnrolledStudents = catchAsync(async (req, res, next) => {
     },
   });
 });
-//TODO: Implement muck payment link generation and confirmation
+
 // POST /api/courses/:courseId/request-payment-link
 exports.requestPaymentLink = catchAsync(async (req, res, next) => {
   const { courseId } = req.params;
@@ -267,3 +270,17 @@ exports.confirmPayment = catchAsync(async (req, res, next) => {
 //TODO: voice review, codify course model for sub-courses
 //TODO: link send to user for payment, payment method
 //TODO: api for email LIARA, delete the useless routes
+
+//TODO: Implement muck payment link generation and confirmation
+
+exports.getAllEnrolledStudents = catchAsync(async (req, res, next) => {
+  const students = await User.find({
+    enrolledCourses: { $exists: true, $not: { $size: 0 } },
+  }).populate('enrolledCourses'); // Only works if enrolledCourses stores Course ObjectIds
+
+  res.status(200).json({
+    status: 'success',
+    results: students.length,
+    data: { students },
+  });
+});
