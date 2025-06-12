@@ -69,7 +69,7 @@ exports.updateCourse = catchAsync(async (req, res, next) => {
   }
 
   if (req.file) {
-    req.body.Image = req.file.filename;
+    req.body.Image = `http://localhost:3000/uploads/${req.file.filename}`;
   } else {
   }
 
