@@ -72,9 +72,14 @@ exports.updateCourse = catchAsync(async (req, res, next) => {
     return next(new AppError('No course found with that ID', 404));
   }
 
-  if (req.file) {
-    req.body.Image = `http://localhost:3000/uploads/${req.file.filename}`;
-  } else {
+  if (req.files['Image'] && req.files['Image'][0]) {
+    req.body.Image = `http://localhost:3000/uploads/${req.files['Image'][0].filename}`;
+  }
+
+  if (req.files['courseImages']) {
+    req.body.courseImages = req.files['courseImages'].map(
+      (file) => `http://localhost:3000/uploads/${file.filename}`
+    );
   }
 
   const updatedCourse = await Course.findByIdAndUpdate(
@@ -93,6 +98,7 @@ exports.updateCourse = catchAsync(async (req, res, next) => {
     },
   });
 });
+
 exports.deleteCourse = catchAsync(async (req, res, next) => {
   const course = await Course.findByIdAndDelete(req.params.id);
 
