@@ -251,7 +251,6 @@ exports.getAllEnrolledStudents = catchAsync(async (req, res, next) => {
 
 //TODO: Implement sendSMS function
 //TODO: postman for verify token and confirm payment
-//TODO: voice review, codify course model for sub-courses
 //TODO: link send to user for payment, payment method
 //TODO: api for email LIARA, delete the useless routes
 //TODO: Implement muck payment link generation and confirmation

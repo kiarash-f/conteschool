@@ -16,10 +16,9 @@ exports.getAllStudentWorks = catchAsync(async (req, res, next) => {
   });
 });
 exports.getStudentWork = catchAsync(async (req, res, next) => {
-  const studentWork = await StudentWork.findOne({slug:req.params.slug}).populate(
-    'student',
-    'name email'
-  );
+  const studentWork = await StudentWork.findOne({
+    slug: req.params.slug,
+  }).populate('student', 'name email');
   if (!studentWork) {
     return next(new AppError('No student work found with that ID', 404));
   }
@@ -31,6 +30,9 @@ exports.getStudentWork = catchAsync(async (req, res, next) => {
   });
 });
 exports.createStudentWork = catchAsync(async (req, res, next) => {
+ if (req.files['Image'] && req.files['Image'][0]) {
+    req.body.Image = `http://localhost:3000/uploads/${req.files['Image'][0].filename}`;
+  }
   const newStudentWork = await StudentWork.create(req.body);
   res.status(201).json({
     status: 'success',

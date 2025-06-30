@@ -24,9 +24,8 @@ exports.getNews = catchAsync(async (req, res, next) => {
 });
 
 exports.createNews = catchAsync(async (req, res, next) => {
-  const { title, description, image } = req.body;
-  if (!title || !description || !image) {
-    return next(new AppError('All fields are required', 400));
+if (req.files['Image'] && req.files['Image'][0]) {
+    req.body.Image = `http://localhost:3000/uploads/${req.files['Image'][0].filename}`;
   }
 
   const newNews = await News.create(req.body);
