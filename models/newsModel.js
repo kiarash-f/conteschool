@@ -14,7 +14,7 @@ const newsSchema = new mongoose.Schema({
     required: [true, 'News must have a description'],
     minlength: [10, 'Description must be at least 10 characters'],
   },
-  image: {
+  Image: {
     type: String,
     required: [true, 'News must have an image'],
   },

@@ -12,7 +12,7 @@ exports.getAllUsers = catchAsync(async (req, res, next) => {
     .limitFields()
     .paginate();
 
-  const users = await features.query;
+  const users = await features.query.populate('course');
 
   // Send response
   res.status(200).json({
@@ -24,12 +24,13 @@ exports.getAllUsers = catchAsync(async (req, res, next) => {
   });
 });
 exports.getUser = catchAsync(async (req, res, next) => {
-  const user = await User.findById(req.params.id).populate({
+  const user = await User.findById(req.params.id)
+    .populate({
       path: 'reviews',
       populate: {
         path: 'course',
-        select: 'name image'
-      }
+        select: 'name image',
+      },
     })
     .populate('enrolledCourses.course');
   if (!user) {

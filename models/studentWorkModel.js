@@ -10,14 +10,14 @@ const studentWorkSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  image: {
+  Image: {
     type: String,
     required: true,
   },
   student: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
-    required: true,
+    // required: true,
   },
   course: {
     type: mongoose.Schema.Types.ObjectId,

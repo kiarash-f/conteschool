@@ -28,6 +28,10 @@ const userSchema = new mongoose.Schema({
     enum: ['student', 'admin'],
     default: 'student',
   },
+  course:{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Course',
+  },
   enrolledCourses: [
     {
       course: {
@@ -49,9 +53,7 @@ const userSchema = new mongoose.Schema({
       },
     },
   ],
- 
-     
-  
+
   createdAt: {
     type: Date,
     default: Date.now,
@@ -61,13 +63,11 @@ const userSchema = new mongoose.Schema({
 userSchema.virtual('reviews', {
   ref: 'Review',
   foreignField: 'user',
-  localField: '_id'
+  localField: '_id',
 });
 
 userSchema.set('toObject', { virtuals: true });
 userSchema.set('toJSON', { virtuals: true });
-
-
 
 const User = mongoose.model('User', userSchema);
 module.exports = User;

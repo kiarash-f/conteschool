@@ -1,6 +1,7 @@
 const express = require('express');
 const newsController = require('../controllers/newsController');
 const authController = require('../controllers/authController');
+const { courseUpload } = require('../controllers/uploadController');
 
 const router = express.Router();
 
@@ -8,9 +9,11 @@ router
   .route('/')
   .get(newsController.getAllNews)
   .post(
-    newsController.createNews,
+    
     authController.protect,
-    authController.restrictTo('admin')
+    authController.restrictTo('admin'),
+    courseUpload,
+    newsController.createNews
   );
 router
   .route('/:id')
