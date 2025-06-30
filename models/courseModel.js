@@ -71,6 +71,9 @@ const courseSchema = new mongoose.Schema({
     type: Boolean,
     default: true, // to toggle course visibility
   },
+  ageGroup: {
+    type: String, // e.g., 'children', 'teenagers', 'adults'
+}
 });
 
 courseSchema.virtual('reviews', {
