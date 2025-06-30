@@ -9,19 +9,19 @@ router
   .route('/')
   .get(studentWorkController.getAllStudentWorks)
   .post(
-    
     authController.protect,
     authController.restrictTo('admin'),
     courseUpload,
-    studentWorkController.createStudentWork,
+    studentWorkController.createStudentWork
   );
 router
   .route('/:id')
 
   .patch(
-    studentWorkController.updateStudentWork,
     authController.protect,
-    authController.restrictTo('admin')
+    authController.restrictTo('admin'),
+    courseUpload,
+    studentWorkController.updateStudentWork
   )
   .delete(
     studentWorkController.deleteStudentWork,

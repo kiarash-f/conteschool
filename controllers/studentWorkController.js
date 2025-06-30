@@ -30,7 +30,7 @@ exports.getStudentWork = catchAsync(async (req, res, next) => {
   });
 });
 exports.createStudentWork = catchAsync(async (req, res, next) => {
- if (req.files['Image'] && req.files['Image'][0]) {
+  if (req.files['Image'] && req.files['Image'][0]) {
     req.body.Image = `http://localhost:3000/uploads/${req.files['Image'][0].filename}`;
   }
   const newStudentWork = await StudentWork.create(req.body);
@@ -42,7 +42,10 @@ exports.createStudentWork = catchAsync(async (req, res, next) => {
   });
 });
 exports.updateStudentWork = catchAsync(async (req, res, next) => {
-  const studentWork = await StudentWork.findByIdAndUpdate(
+  if (req.files['Image'] && req.files['Image'][0]) {
+    req.body.Image = `http://localhost:3000/uploads/${req.files['Image'][0].filename}`;
+  }
+  const newStudentWork = await StudentWork.findByIdAndUpdate(
     req.params.id,
     req.body,
     {
@@ -50,13 +53,11 @@ exports.updateStudentWork = catchAsync(async (req, res, next) => {
       runValidators: true,
     }
   );
-  if (!studentWork) {
-    return next(new AppError('No student work found with that ID', 404));
-  }
+
   res.status(200).json({
     status: 'success',
     data: {
-      studentWork,
+      newStudentWork,
     },
   });
 });

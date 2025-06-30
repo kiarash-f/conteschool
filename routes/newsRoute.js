@@ -9,7 +9,6 @@ router
   .route('/')
   .get(newsController.getAllNews)
   .post(
-    
     authController.protect,
     authController.restrictTo('admin'),
     courseUpload,
@@ -19,9 +18,10 @@ router
   .route('/:id')
 
   .patch(
-    newsController.updateNews,
     authController.protect,
-    authController.restrictTo('admin')
+    authController.restrictTo('admin'),
+    courseUpload,
+    newsController.updateNews
   )
   .delete(
     newsController.deleteNews,
