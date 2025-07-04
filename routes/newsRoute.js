@@ -27,7 +27,7 @@ router
     newsController.deleteNews,
     authController.protect,
     authController.restrictTo('admin')
-  );
-router.route('/:slug').get(newsController.getNews);
+  )
+  .get(newsController.getNews);
 
 module.exports = router;

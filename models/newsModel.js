@@ -31,10 +31,10 @@ const newsSchema = new mongoose.Schema({
   timestamps: true
 });
 // Middleware to create a slug from the title before saving
-newsSchema.pre('save', function(next) {
-  this.slug = slugify(this.title, { lower: true });
-  next();
-});
+// newsSchema.pre('save', function(next) {
+//   this.slug = slugify(this.title, { lower: true });
+//   next();
+// });
 
 const News = mongoose.model('News', newsSchema);
 module.exports = News;
