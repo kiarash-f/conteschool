@@ -32,27 +32,17 @@ const userSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Course',
   },
-  enrolledCourses: [
-    {
-      course: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Course',
-      },
-      enrolledAt: {
-        type: Date,
-        default: Date.now,
-      },
-      paymentStatus: {
-        type: String,
-        enum: ['pending', 'paid', 'failed'],
-        default: 'pending',
-      },
-      reserved: {
-        type: Boolean,
-        default: false,
-      },
+enrolledCourses: [
+  {
+    course: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Course'
     },
-  ],
+    paymentStatus: { type: String, default: 'pending' },
+    reserved: { type: Boolean, default: false },
+    enrolledAt: { type: Date, default: Date.now }
+  }
+],
 
   createdAt: {
     type: Date,

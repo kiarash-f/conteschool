@@ -3,10 +3,9 @@ const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 
 exports.getAllStudentWorks = catchAsync(async (req, res, next) => {
-  const studentWorks = await StudentWork.find().populate(
-    'student',
-    'name email'
-  );
+  const studentWorks = await StudentWork.find()
+    .populate('student', 'name email')
+    .populate('course', 'name ');
   res.status(200).json({
     status: 'success',
     results: studentWorks.length,
@@ -16,9 +15,10 @@ exports.getAllStudentWorks = catchAsync(async (req, res, next) => {
   });
 });
 exports.getStudentWork = catchAsync(async (req, res, next) => {
-  const studentWork = await StudentWork.findOne({
-    slug: req.params.slug,
-  }).populate('student', 'name email');
+  const studentWork = await StudentWork.findOne(req.params.id)
+    .populate('student', 'name email')
+    .populate('course', 'name');
+
   if (!studentWork) {
     return next(new AppError('No student work found with that ID', 404));
   }

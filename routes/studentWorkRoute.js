@@ -16,6 +16,7 @@ router
   );
 router
   .route('/:id')
+  .get(studentWorkController.getStudentWork)
 
   .patch(
     authController.protect,
@@ -28,6 +29,6 @@ router
     authController.protect,
     authController.restrictTo('admin')
   );
-router.route('/:slug').get(studentWorkController.getStudentWork);
+
 
 module.exports = router;
