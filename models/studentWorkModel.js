@@ -29,11 +29,7 @@ const studentWorkSchema = new mongoose.Schema({
     default: Date.now,
   },
 });
-// Middleware to create a slug from the title before saving
-studentWorkSchema.pre('save', function (next) {
-  this.slug = slugify(this.title, { lower: true });
-  next();
-});
+
 
 const StudentWork = mongoose.model('StudentWork', studentWorkSchema);
 module.exports = StudentWork;

@@ -10,11 +10,7 @@ const courseSchema = new mongoose.Schema({
     unique: true,
     trim: true,
   },
-  slug: {
-    type: String,
-    unique: true,
-    lowercase: true,
-  },
+ 
   description: {
     type: String,
     required: [true, 'A course must have a description'],
