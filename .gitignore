@@ -1,3 +1,4 @@
 conteVisualArts/
 node_modules/
 uploads/
+config.env/
