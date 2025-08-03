@@ -18,7 +18,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MjRiZmUxMzQ4MWRiMDU0OTkxNTlhNiIsImlhdCI6MTc0OTQ1MjU1MSwiZXhwIjoxNzUwMDU3MzUxfQ.4SMHhfWQeCyPUH-oqiDNF2daPF9FV9PK0conhoD1kjI",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MjRiZmUxMzQ4MWRiMDU0OTkxNTlhNiIsImlhdCI6MTc1MTYxNDc3OCwiZXhwIjoxNzUyMjE5NTc4fQ.eMjj1bOpXw56gfAU2uEgti0eAfpL9S1lS2e9B0XeJZs",
 									"type": "string"
 								}
 							]
@@ -179,7 +179,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"phone\": \"09127119299\",\r\n\r\n    // \"method\": \"sms\",\r\n    // \"templateID\": 15472\r\n    \"otp\":\"882255\"\r\n\r\n}\r\n",
+							"raw": "{\r\n    \"phone\": \"09127119299\",\r\n     \"otp\":\"395923\"\r\n\r\n    // \"method\": \"sms\",\r\n    // \"templateID\": 15472\r\n   \r\n\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -326,7 +326,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MjRiZmUxMzQ4MWRiMDU0OTkxNTlhNiIsImlhdCI6MTc0NzgxMDg4MSwiZXhwIjoxNzQ4NDE1NjgxfQ.3zTgun07Byt0yKE7E77HZ9XKn-W4sM52YoWPYHdeFUg",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MjRiZmUxMzQ4MWRiMDU0OTkxNTlhNiIsImlhdCI6MTc1MTI2ODA1MSwiZXhwIjoxNzUxODcyODUxfQ.S17OvVReIH5CwiRcCPl5Ba4Fnoe-D4Kmh84EkcSGxpc",
 									"type": "string"
 								}
 							]
@@ -367,7 +367,7 @@
 									"key": "image",
 									"contentType": "multipart/form-data",
 									"type": "file",
-									"src": "/C:/Users/USER/OneDrive/Desktop/localhost_5173_home (2).png"
+									"src": "/C:/Users/USER/OneDrive/Desktop/contevisualschool/public/IMG-20250609-WA0008.jpg"
 								},
 								{
 									"key": "startDate",
@@ -739,6 +739,16 @@
 				{
 					"name": "Create News",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MjRiZmUxMzQ4MWRiMDU0OTkxNTlhNiIsImlhdCI6MTc1MTI2ODA1MSwiZXhwIjoxNzUxODcyODUxfQ.S17OvVReIH5CwiRcCPl5Ba4Fnoe-D4Kmh84EkcSGxpc",
+									"type": "string"
+								}
+							]
+						},
 						"method": "POST",
 						"header": [
 							{
@@ -748,8 +758,25 @@
 							}
 						],
 						"body": {
-							"mode": "raw",
-							"raw": "{\r\n  \"title\": \"New Workshop Announced\",\r\n  \"description\": \"Join our exciting new workshop for kids this summer!\",\r\n  \"image\": \"https://yourdomain.com/images/workshop.jpg\"\r\n}"
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "Image",
+									"contentType": "multipart/form-data",
+									"type": "file",
+									"src": "/C:/Users/USER/OneDrive/Desktop/contevisualschool/public/IMG-20250609-WA0008.jpg"
+								},
+								{
+									"key": "description",
+									"value": "test 222222222",
+									"type": "text"
+								},
+								{
+									"key": "title",
+									"value": "testsss",
+									"type": "text"
+								}
+							]
 						},
 						"url": {
 							"raw": "{{base_url}}/api/v1/news",
@@ -897,6 +924,16 @@
 				{
 					"name": "Create Student Work",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MjRiZmUxMzQ4MWRiMDU0OTkxNTlhNiIsImlhdCI6MTc1MTI2ODA1MSwiZXhwIjoxNzUxODcyODUxfQ.S17OvVReIH5CwiRcCPl5Ba4Fnoe-D4Kmh84EkcSGxpc",
+									"type": "string"
+								}
+							]
+						},
 						"method": "POST",
 						"header": [
 							{
@@ -906,8 +943,25 @@
 							}
 						],
 						"body": {
-							"mode": "raw",
-							"raw": "{\r\n  \"title\": \"New Workshop Announced\",\r\n  \"description\": \"Join our exciting new workshop for kids this summer!\",\r\n  \"image\": \"https://yourdomain.com/images/workshop.jpg\"\r\n}"
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "Image",
+									"contentType": "multipart/form-data",
+									"type": "file",
+									"src": "/C:/Users/USER/OneDrive/Desktop/contevisualschool/public/IMG-20250609-WA0010.jpg"
+								},
+								{
+									"key": "title",
+									"value": "test",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "test description",
+									"type": "text"
+								}
+							]
 						},
 						"url": {
 							"raw": "{{base_url}}/api/v1/studentWorks",
@@ -1087,6 +1141,43 @@
 								"v1",
 								"reviews",
 								"684a8154cd934478a9826c7b"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "payment",
+			"item": [
+				{
+					"name": "Request Payment",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"amount\": 10000,\r\n  \"description\": \"پرداخت هزینه دوره طراحی\",\r\n  \"email\": \"user@example.com\",\r\n  \"mobile\": \"09123456789\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/payments/request",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"payments",
+								"request"
 							]
 						}
 					},

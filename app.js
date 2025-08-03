@@ -9,6 +9,8 @@ const newsRoute = require('./routes/newsRoute');
 const studentWorkRoute = require('./routes/studentWorkRoute');
 const sitemapRoutes = require('./routes/sitemapRoutes');
 const reviewRoute = require('./routes/reviewRoute');
+const payment = require('./models/payment');
+const paymentRoutes = require('./routes/paymentRoutes');
 
 const app = express();
 
@@ -28,7 +30,7 @@ app.use(morgan('dev'));
 // ✅ Parse JSON request bodies
 app.use(express.json());
 
-// ✅ Parse URL-encoded form data 
+// ✅ Parse URL-encoded form data
 app.use(express.urlencoded({ extended: true }));
 
 // ✅ Serve uploaded files  from /uploads path
@@ -40,10 +42,10 @@ app.use(express.static('public'));
 // ✅ Mount API Routes
 app.use('/', sitemapRoutes);
 app.use('/api/v1/courses', coursesRoute);
-app.use('/api/v1/users', userRoute); 
+app.use('/api/v1/users', userRoute);
 app.use('/api/v1/news', newsRoute);
 app.use('/api/v1/studentWorks', studentWorkRoute);
 app.use('/api/v1/reviews', reviewRoute);
-
+app.use('/api/v1/payments', paymentRoutes);
 
 module.exports = app;
