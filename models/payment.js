@@ -7,8 +7,22 @@ const paymentSchema = new mongoose.Schema(
     description: { type: String },
     email: { type: String },
     mobile: { type: String },
-    status: { type: String, enum: ['pending', 'success', 'failed'], default: 'pending' },
+    status: {
+      type: String,
+      enum: ['pending', 'success', 'failed'],
+      default: 'pending',
+    },
     ref_id: { type: String },
+    student: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Student',
+      required: true,
+    },
+    course: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Course',
+      required: true,
+    },
   },
   { timestamps: true }
 );

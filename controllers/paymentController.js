@@ -12,7 +12,8 @@ const ZARINPAL_API =
     : 'https://api.zarinpal.com/pg/v4/payment';
 
 exports.requestPayment = catchAsync(async (req, res, next) => {
-  const { amount, description, email, mobile } = req.body;
+  const { amount, description, email, mobile, courseId } = req.body;
+  const studentId = req.user._id;
 
   const response = await axios.post(`${ZARINPAL_API}/request.json`, {
     merchant_id: process.env.ZARINPAL_MERCHANT_ID,
@@ -39,6 +40,8 @@ exports.requestPayment = catchAsync(async (req, res, next) => {
       description,
       email,
       mobile,
+      student: studentId,
+      course: courseId,
       status: 'pending',
     });
 
@@ -58,7 +61,6 @@ exports.verifyPayment = catchAsync(async (req, res, next) => {
   const { Authority, Status } = req.query;
 
   if (Status !== 'OK') {
-   
     await Payment.findOneAndUpdate(
       { authority: Authority },
       { status: 'failed' }
@@ -74,7 +76,7 @@ exports.verifyPayment = catchAsync(async (req, res, next) => {
 
   const response = await axios.post(`${ZARINPAL_API}/verify.json`, {
     merchant_id: process.env.ZARINPAL_MERCHANT_ID,
-    amount: payment.amount, 
+    amount: payment.amount,
     authority: Authority,
   });
 
@@ -103,3 +105,9 @@ exports.verifyPayment = catchAsync(async (req, res, next) => {
     });
   }
 });
+
+
+//TODO: i have to find way to availabe course for student after payment
+//TODO: i have to find way to send sms to student after payment
+//TODO: i have to find way to send FAKTOR to student after payment in profile
+
