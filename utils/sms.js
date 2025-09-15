@@ -33,7 +33,6 @@ const sendMockOTP = (key, otp) => {
   console.log(`Mock OTP sent to ${key}: ${otp}`);
 };
 
-
 const message = new MessageWay(process.env.MESSAGEWAY_API_KEY);
 
 const sendOtpSMS = async (phone) => {
@@ -53,9 +52,30 @@ const sendOtpSMS = async (phone) => {
     throw error;
   }
 };
+const notifyAdminSMS = async (payment, course, student) => {
+  try {
+    const text = `پرداخت موفق: 
+دوره: ${course.title}
+دانشجو: ${student.name}
+مبلغ: ${payment.amount}
+کد پیگیری: ${payment.ref_id}`;
 
+    const referenceID = await message.sendSMS({
+      mobile: process.env.ADMIN_MOBILE, // set this in config.env
+      message: text, // free text template
+      method: 'sms',
+    });
+
+    console.log('Admin notified. Ref ID:', referenceID);
+    return referenceID;
+  } catch (error) {
+    console.error('Error sending Admin SMS:', error);
+    throw error;
+  }
+};
 
 module.exports = {
+  notifyAdminSMS,
   generateOTP,
   saveOTP,
   verifyOTP,
