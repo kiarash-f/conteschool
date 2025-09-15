@@ -28,7 +28,8 @@
     "puppeteer": "^24.9.0",
     "safe-buffer": "^5.2.1",
     "sharp": "^0.34.1",
-    "slugify": "^1.6.6"
+    "slugify": "^1.6.6",
+    "zarinpal-node-sdk": "^2.2.0"
   },
   "devDependencies": {
     "cross-env": "^7.0.3",
