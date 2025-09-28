@@ -85,9 +85,12 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "{{base_url}}/api/v1/users",
+							"raw": "https://contevisualschool.liara.run/api/v1/users",
+							"protocol": "https",
 							"host": [
-								"{{base_url}}"
+								"contevisualschool",
+								"liara",
+								"run"
 							],
 							"path": [
 								"api",
@@ -576,37 +579,6 @@
 								"v1",
 								"courses",
 								"682d8afa07815bdbf4a4c368"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get Payment Link",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MzFlYzdjNTNkOTczMTQ5NWQ4MGJlMCIsImlhdCI6MTc0ODI1OTM2OSwiZXhwIjoxNzQ4ODY0MTY5fQ.KEapsk6RN2Z8nhpT-HcyaOW8OnIV3_XAbvDHvlZWCZg",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/api/v1/courses/request-link/682e3275ef3eecd9a03aaf2f",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"courses",
-								"request-link",
-								"682e3275ef3eecd9a03aaf2f"
 							]
 						}
 					},
@@ -1161,7 +1133,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"amount\": 10000,\r\n  \"description\": \"پرداخت هزینه دوره طراحی\",\r\n  \"email\": \"user@example.com\",\r\n  \"mobile\": \"09123456789\"\r\n}",
+							"raw": "{\r\n  \"amount\": 10000,\r\n  \"description\": \"پرداخت هزینه دوره طراحی\",\r\n  \"email\": \"user@example.com\",\r\n  \"mobile\": \"09123456789\",\r\n  \"courseId\": \"64a321aaa4bc12345\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1178,6 +1150,26 @@
 								"v1",
 								"payments",
 								"request"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Verify Payment",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/payments/verify",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"payments",
+								"verify"
 							]
 						}
 					},
