@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "cross-env NODE_ENV=test jest --runInBand"
+    "test": "cross-env NODE_ENV=test jest --runInBand",
+    "start": "node server.js",
+    "dev": "nodemon server.js"
   },
   "keywords": [],
   "author": "",
@@ -17,15 +19,13 @@
     "cors": "^2.8.5",
     "crypto": "^1.0.1",
     "dotenv": "^16.5.0",
-    "express": "^5.1.0",
+    "express": "^4.21.2",
     "jsonwebtoken": "^9.0.2",
-    "kavenegar": "^1.1.4",
     "messageway": "^1.2.0",
     "mongoose": "^8.14.2",
     "morgan": "^1.10.0",
     "multer": "^1.4.5-lts.2",
     "path": "^0.12.7",
-    "puppeteer": "^24.9.0",
     "safe-buffer": "^5.2.1",
     "sharp": "^0.34.1",
     "slugify": "^1.6.6",

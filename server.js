@@ -4,23 +4,24 @@ const app = require('./app');
 
 // 🔒 Handle uncaught exceptions early
 process.on('uncaughtException', (err) => {
-  console.log('UNCAUGHT EXCEPTION 💥 Shutting down...');
-  console.log(err.name, err.message);
+  console.error('UNCAUGHT EXCEPTION:', err.stack || err);
   process.exit(1);
 });
 
-// ✅ Dynamically use `.env` or `.env.test` based on NODE_ENV
 dotenv.config({
   path: process.env.NODE_ENV === 'test' ? './.env.test' : './config.env',
 });
 
 // ✅ Replace password in DB URI
-const DB = process.env.DATABASE.replace('<PASSWORD>', process.env.DATABASE_PASSWORD);
+const DB = process.env.DATABASE;
 
-// ✅ Connect to MongoDB
-mongoose.connect(DB, {}).then(() => {
-  console.log('DB connection successful!');
-});
+mongoose
+  .connect(DB, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => console.log('DB connection successful!'))
+  .catch((err) => console.error('DB connection error:', err));
 
 // ✅ Only start the server in non-test environments
 let server;
@@ -32,12 +33,12 @@ if (process.env.NODE_ENV !== 'test') {
 }
 
 // 🔒 Handle unhandled promise rejections
-process.on('unhandledRejection', (err) => {
-  console.log('UNHANDLED REJECTION 💥 Shutting down...');
-  console.log(err.name, err.message);
-  if (server) {
-    server.close(() => process.exit(1));
-  } else {
-    process.exit(1);
-  }
+process.on('unhandledRejection', (reason, promise) => {
+  console.error(
+    'UNHANDLED REJECTION at:',
+    promise,
+    'reason:',
+    reason && (reason.stack || reason)
+  );
+  // optionally shutdown server gracefully then exit
 });

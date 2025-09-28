@@ -1,0 +1,9 @@
+{
+  "disks": [
+    {
+      "name": "conte-disk",
+      "mountTo": "uploads"
+    }
+  ],
+  "port": 3000
+}

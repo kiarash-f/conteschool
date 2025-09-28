@@ -12,7 +12,7 @@ exports.getAllUsers = catchAsync(async (req, res, next) => {
     .limitFields()
     .paginate();
 
-  const users = await features.query.populate('enrolledCourses._id', 'name');
+  const users = await features.query.populate('enrolledCourses.course');
 
   // Send response
   res.status(200).json({
