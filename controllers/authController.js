@@ -3,16 +3,7 @@ const User = require('../models/userModel');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 const { promisify } = require('util');
-const {
-  // generateOTP,
-  // saveOTP,
-  // verifyOTP,
-  // clearOTP,
-  sendMockOTP,
-  sendOtpSMS,
-  message,
-  // otpStore,
-} = require('../utils/sms');
+const { sendMockOTP, sendOtpSMS, message } = require('../utils/sms');
 
 const signToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -96,7 +87,6 @@ exports.signup = catchAsync(async (req, res, next) => {
     data: { user: newUser },
   });
 });
-
 exports.logout = catchAsync(async (req, res, next) => {
   res.cookie('jwt', 'loggedout', {
     expires: new Date(Date.now() + 10 * 1000), // 10 seconds
@@ -108,7 +98,6 @@ exports.logout = catchAsync(async (req, res, next) => {
     message: 'Logged out successfully',
   });
 });
-// Protect routes
 exports.protect = catchAsync(async (req, res, next) => {
   let token;
   if (
@@ -134,7 +123,6 @@ exports.protect = catchAsync(async (req, res, next) => {
   req.user = currentUser;
   next();
 });
-// Restrict to roles
 exports.restrictTo = (...roles) => {
   return (req, res, next) => {
     if (!roles.includes(req.user.role)) {

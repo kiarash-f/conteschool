@@ -1,7 +1,7 @@
 const express = require('express');
 const studentWorkController = require('../controllers/studentWorkController');
 const authController = require('../controllers/authController');
-const { courseUpload } = require('../controllers/uploadController');
+const { imageUpload } = require('../controllers/uploadController');
 
 const router = express.Router();
 
@@ -11,7 +11,7 @@ router
   .post(
     authController.protect,
     authController.restrictTo('admin'),
-    courseUpload,
+    imageUpload,
     studentWorkController.createStudentWork
   );
 router
@@ -21,7 +21,7 @@ router
   .patch(
     authController.protect,
     authController.restrictTo('admin'),
-    courseUpload,
+    imageUpload,
     studentWorkController.updateStudentWork
   )
   .delete(
@@ -29,6 +29,5 @@ router
     authController.protect,
     authController.restrictTo('admin')
   );
-
 
 module.exports = router;

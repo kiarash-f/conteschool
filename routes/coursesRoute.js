@@ -1,19 +1,12 @@
 const express = require('express');
 const coursesController = require('../controllers/coursesController');
 const authController = require('../controllers/authController');
-const { courseUpload } = require('../controllers/uploadController'); // Updated import
+const { imageUpload } = require('../controllers/uploadController');
 
 const router = express.Router();
 
 router.get('/enrolled-students', coursesController.getAllEnrolledStudents);
 router.get('/:id/enrolled-students', coursesController.getEnrolledStudents);
-router.post(
-  '/request-link/:courseId',
-  authController.protect,
-  coursesController.requestPaymentLink
-);
-router.get('/verify/:token', coursesController.verifyCourseToken);
-router.post('/pay/:token', coursesController.confirmPayment);
 
 router
   .route('/')
@@ -21,7 +14,7 @@ router
   .post(
     authController.protect,
     authController.restrictTo('admin'),
-    courseUpload,
+    imageUpload,
     coursesController.createCourse
   );
 
@@ -31,7 +24,7 @@ router
   .patch(
     authController.protect,
     authController.restrictTo('admin'),
-    courseUpload, 
+    imageUpload,
     coursesController.updateCourse
   )
   .delete(

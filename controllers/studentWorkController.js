@@ -31,7 +31,7 @@ exports.getStudentWork = catchAsync(async (req, res, next) => {
 });
 exports.createStudentWork = catchAsync(async (req, res, next) => {
   if (req.files['Image'] && req.files['Image'][0]) {
-    req.body.Image = `http://localhost:3000/uploads/${req.files['Image'][0].filename}`;
+    req.body.Image = `https://conteschool.ir/uploads/${req.files['Image'][0].filename}`;
   }
   const newStudentWork = await StudentWork.create(req.body);
   res.status(201).json({
@@ -43,7 +43,7 @@ exports.createStudentWork = catchAsync(async (req, res, next) => {
 });
 exports.updateStudentWork = catchAsync(async (req, res, next) => {
   if (req.files['Image'] && req.files['Image'][0]) {
-    req.body.Image = `http://localhost:3000/uploads/${req.files['Image'][0].filename}`;
+    req.body.Image = `https://conteschool.ir/uploads/${req.files['Image'][0].filename}`;
   }
   const newStudentWork = await StudentWork.findByIdAndUpdate(
     req.params.id,

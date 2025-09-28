@@ -11,7 +11,6 @@ exports.getAllNews = catchAsync(async (req, res, next) => {
     data: { news },
   });
 });
-
 exports.getNews = catchAsync(async (req, res, next) => {
   const news = await News.findById(req.params.id);
   if (!news) {
@@ -22,10 +21,9 @@ exports.getNews = catchAsync(async (req, res, next) => {
     data: { news },
   });
 });
-
 exports.createNews = catchAsync(async (req, res, next) => {
   if (req.files['Image'] && req.files['Image'][0]) {
-    req.body.Image = `http://localhost:3000/uploads/${req.files['Image'][0].filename}`;
+    req.body.Image = `https://conteschool.ir/uploads/${req.files['Image'][0].filename}`;
   }
 
   const newNews = await News.create(req.body);
@@ -34,10 +32,9 @@ exports.createNews = catchAsync(async (req, res, next) => {
     data: { news: newNews },
   });
 });
-
 exports.updateNews = catchAsync(async (req, res, next) => {
   if (req.files['Image'] && req.files['Image'][0]) {
-    req.body.Image = `http://localhost:3000/uploads/${req.files['Image'][0].filename}`;
+    req.body.Image = `https://conteschool.ir/uploads/${req.files['Image'][0].filename}`;
   }
   const newNews = await News.findByIdAndUpdate(req.params.id, req.body, {
     new: true,
@@ -49,7 +46,6 @@ exports.updateNews = catchAsync(async (req, res, next) => {
     data: { newNews },
   });
 });
-
 exports.deleteNews = catchAsync(async (req, res, next) => {
   const news = await News.findByIdAndDelete(req.params.id);
   if (!news) {
