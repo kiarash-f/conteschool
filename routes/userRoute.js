@@ -1,6 +1,7 @@
 const express = require('express');
 const userController = require('../controllers/userController');
 const authController = require('../controllers/authController');
+const courseController = require('../controllers/coursesController');
 
 const router = express.Router();
 
@@ -9,6 +10,17 @@ router.post('/login', authController.login);
 router.post('/logout', authController.logout);
 
 router.use(authController.protect);
+
+router.post(
+  '/:userId/courses/:courseId',
+  authController.restrictTo('admin'),
+  courseController.addUserToCourse
+);
+router.delete(
+  '/:userId/courses/:courseId',
+  authController.restrictTo('admin'),
+  courseController.removeStudentFromCourse
+);
 
 router.get('/', userController.getAllUsers);
 

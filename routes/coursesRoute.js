@@ -8,6 +8,7 @@ const router = express.Router();
 router.get('/enrolled-students', coursesController.getAllEnrolledStudents);
 router.get('/:id/enrolled-students', coursesController.getEnrolledStudents);
 
+
 router
   .route('/')
   .get(coursesController.getAllCourses)

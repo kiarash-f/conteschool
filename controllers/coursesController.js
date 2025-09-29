@@ -146,6 +146,58 @@ exports.getAllEnrolledStudents = catchAsync(async (req, res, next) => {
   });
 });
 
+exports.addUserToCourse = catchAsync(async (req, res, next) => {
+  const { userId, courseId } = req.params;
+
+  const user = await User.findById(userId);
+  if (!user) {
+    return next(new AppError('User not found', 404));
+  }
+  const course = await Course.findById(courseId);
+  if (!course) {
+    return next(new AppError('Course not found', 404));
+  }
+  if (course.availableSeats <= 0) {
+    return next(new AppError('No available seats in this course', 400));
+  }
+  user.enrolledCourses.push(courseId);
+  await user.save();
+  course.enrolledStudents.push(userId);
+  course.availableSeats -= 1;
+  await course.save();
+  res.status(200).json({
+    status: 'success',
+    message: 'User enrolled in course successfully',
+  });
+});
+exports.removeStudentFromCourse = catchAsync(async (req, res, next) => {
+  const { userId, courseId } = req.params;
+  const user = await User.findById(userId);
+  if (!user) {
+    return next(new AppError('User not found', 404));
+  }
+  const course = await Course.findById(courseId);
+  if (!course) {
+    return next(new AppError('Course not found', 404));
+  }
+  user.enrolledCourses = user.enrolledCourses.filter(
+    (course) => course.toString() !== courseId
+  );
+  await user.save();
+  course.enrolledStudents = course.enrolledStudents.filter(
+    (student) => student.toString() !== userId
+  );
+
+  if (course.availableSeats < course.maxcapacity) {
+    course.availableSeats += 1;
+    await course.save();
+  }
+  res.status(200).json({
+    status: 'success',
+    message: 'User removed from course successfully',
+  });
+});
+
 // POST /api/courses/:courseId/request-payment-link
 // exports.requestPaymentLink = catchAsync(async (req, res, next) => {
 //   const { courseId } = req.params;
@@ -249,5 +301,3 @@ exports.getAllEnrolledStudents = catchAsync(async (req, res, next) => {
 //     message: 'Payment confirmed and course added to profile',
 //   });
 // });
-
-
