@@ -10,7 +10,7 @@ const courseSchema = new mongoose.Schema({
     unique: true,
     trim: true,
   },
- 
+
   description: {
     type: String,
     required: [true, 'A course must have a description'],
@@ -47,6 +47,10 @@ const courseSchema = new mongoose.Schema({
     required: [true, 'You must set available seats'],
     min: [0, 'Available seats cannot be negative'],
   },
+  maxcapacity: {
+    type: Number,
+    required: [true, 'You must set maximum capacity'],
+  },
   enrolledStudents: [
     {
       type: mongoose.Schema.Types.ObjectId,
@@ -69,7 +73,7 @@ const courseSchema = new mongoose.Schema({
   },
   ageGroup: {
     type: String, // e.g., 'children', 'teenagers', 'adults'
-}
+  },
 });
 
 courseSchema.virtual('reviews', {

@@ -285,7 +285,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4M2QzYjM1NGM0OWQzYzJmNmZmODkyZCIsImlhdCI6MTc0ODg0MzMxNywiZXhwIjoxNzQ5NDQ4MTE3fQ.9z8x2I-gFmt-pRVk8G_lnv7ZeszXqfgkkXrAypWl7X0",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZDkyMDE4NjZjY2U5MzI1MjAzNDQzMyIsImlhdCI6MTc1OTA1OTk5MiwiZXhwIjoxNzU5NjY0NzkyfQ.gwMuQPLJmP56EjLfdJLGX4baNJ1xcSjqdvHQ6CMMhp0",
 									"type": "string"
 								}
 							]
@@ -294,7 +294,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"email\":\"kia72@gmail.com\"\r\n}",
+							"raw": "{\r\n  \"enrolledCourses\": [\r\n    {\r\n      \"course\": \"68d936c79aee00955ab8e940\",\r\n      \"paymentStatus\": \"paid\",\r\n      \"reserved\": true\r\n    },\r\n    {\r\n      \"course\": \"68d9211c66cce93252034479\",\r\n      \"paymentStatus\": \"paid\",\r\n      \"reserved\": true\r\n    }\r\n  ]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -302,7 +302,39 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url}}/api/v1/users/683d3b354c49d3c2f6ff892d",
+							"raw": "https://conteschool.ir/api/v1/users/68d7da3e92cfe33686b01dec",
+							"protocol": "https",
+							"host": [
+								"conteschool",
+								"ir"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"68d7da3e92cfe33686b01dec"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add user to course",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZDdjN2ZiOTJlM2JmNjE1YjhiYzUyYyIsImlhdCI6MTc1OTE2NDEyNSwiZXhwIjoxNzU5NzY4OTI1fQ.ZzD1OZl8ZYvEYei823EGAi8tHw9ih61ZQ8Jeajp8g_M",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/users/68d7da3e92cfe33686b01dec/courses/68dab98d646028ab1f3939ab",
 							"host": [
 								"{{base_url}}"
 							],
@@ -310,7 +342,41 @@
 								"api",
 								"v1",
 								"users",
-								"683d3b354c49d3c2f6ff892d"
+								"68d7da3e92cfe33686b01dec",
+								"courses",
+								"68dab98d646028ab1f3939ab"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete user from course",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZDdjN2ZiOTJlM2JmNjE1YjhiYzUyYyIsImlhdCI6MTc1OTE2NDEyNSwiZXhwIjoxNzU5NzY4OTI1fQ.ZzD1OZl8ZYvEYei823EGAi8tHw9ih61ZQ8Jeajp8g_M",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/users/68d7da3e92cfe33686b01dec/courses/68dab98d646028ab1f3939ab",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"68d7da3e92cfe33686b01dec",
+								"courses",
+								"68dab98d646028ab1f3939ab"
 							]
 						}
 					},
@@ -329,7 +395,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MjRiZmUxMzQ4MWRiMDU0OTkxNTlhNiIsImlhdCI6MTc1MTI2ODA1MSwiZXhwIjoxNzUxODcyODUxfQ.S17OvVReIH5CwiRcCPl5Ba4Fnoe-D4Kmh84EkcSGxpc",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZDkyMDE4NjZjY2U5MzI1MjAzNDQzMyIsImlhdCI6MTc1OTA1OTk5MiwiZXhwIjoxNzU5NjY0NzkyfQ.gwMuQPLJmP56EjLfdJLGX4baNJ1xcSjqdvHQ6CMMhp0",
 									"type": "string"
 								}
 							]
@@ -367,12 +433,6 @@
 									"type": "text"
 								},
 								{
-									"key": "image",
-									"contentType": "multipart/form-data",
-									"type": "file",
-									"src": "/C:/Users/USER/OneDrive/Desktop/contevisualschool/public/IMG-20250609-WA0008.jpg"
-								},
-								{
 									"key": "startDate",
 									"value": "2025-06-01T00:00:00.000Z",
 									"type": "text"
@@ -381,6 +441,11 @@
 									"key": "availableSeats",
 									"value": "10",
 									"type": "text"
+								},
+								{
+									"key": "Image",
+									"type": "file",
+									"src": "/D:/contevisualschool/uploads/1749746050339-687637961.jpg"
 								}
 							]
 						},
