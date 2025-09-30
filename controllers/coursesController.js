@@ -172,132 +172,35 @@ exports.addUserToCourse = catchAsync(async (req, res, next) => {
 });
 exports.removeStudentFromCourse = catchAsync(async (req, res, next) => {
   const { userId, courseId } = req.params;
+
   const user = await User.findById(userId);
   if (!user) {
     return next(new AppError('User not found', 404));
   }
+
   const course = await Course.findById(courseId);
   if (!course) {
     return next(new AppError('Course not found', 404));
   }
+
+  // remove course from user's enrolledCourses (object array)
   user.enrolledCourses = user.enrolledCourses.filter(
-    (course) => course.toString() !== courseId
+    (c) => c._id.toString() !== courseId
   );
   await user.save();
+
+  // remove user from course's enrolledStudents
   course.enrolledStudents = course.enrolledStudents.filter(
     (student) => student.toString() !== userId
   );
 
   if (course.availableSeats < course.maxcapacity) {
     course.availableSeats += 1;
-    await course.save();
   }
+  await course.save();
+
   res.status(200).json({
     status: 'success',
     message: 'User removed from course successfully',
   });
 });
-
-// POST /api/courses/:courseId/request-payment-link
-// exports.requestPaymentLink = catchAsync(async (req, res, next) => {
-//   const { courseId } = req.params;
-//   const user = req.user;
-
-//   const contact = user.phone || user.email;
-//   if (!contact) {
-//     return next(
-//       new AppError(
-//         'User must have a phone or email to receive payment link',
-//         400
-//       )
-//     );
-//   }
-//   const course = await Course.findById(courseId);
-//   if (!course) {
-//     return next(new AppError('Course not found', 404));
-//   }
-
-//   // Generate token with student and course info
-//   const token = jwt.sign(
-//     {
-//       studentId: user._id,
-//       courseId: course._id,
-//     },
-//     process.env.JWT_SECRET,
-//     { expiresIn: '1h' } // Token valid for 1 hour
-//   );
-
-//   const link = `https://yourdomain.com/pay-course/${token}`;
-
-//   // Send SMS or email
-//   await sendSMS(contact, `Here's your course payment link: ${link}`);
-
-//   res.status(200).json({
-//     status: 'success',
-//     message: 'Payment link sent',
-//   });
-// });
-
-// exports.verifyCourseToken = catchAsync(async (req, res, next) => {
-//   const { token } = req.params;
-
-//   let decoded;
-//   try {
-//     decoded = jwt.verify(token, process.env.JWT_SECRET);
-//   } catch (err) {
-//     return next(new AppError('Token is invalid or expired', 400));
-//   }
-
-//   const { studentId, courseId } = decoded;
-
-//   const user = await User.findById(studentId);
-//   const course = await Course.findById(courseId);
-
-//   if (!user || !course) {
-//     return next(new AppError('User or course not found', 404));
-//   }
-
-//   res.status(200).json({
-//     status: 'success',
-//     data: {
-//       user: {
-//         name: user.name,
-//         phone: user.phone,
-//         email: user.email,
-//       },
-//       course: {
-//         name: course.name,
-//         description: course.description,
-//         price: course.price,
-//       },
-//     },
-//   });
-// });
-
-// exports.confirmPayment = catchAsync(async (req, res, next) => {
-//   const { token } = req.params;
-
-//   let decoded;
-//   try {
-//     decoded = jwt.verify(token, process.env.JWT_SECRET);
-//   } catch (err) {
-//     return next(new AppError('Invalid or expired token', 400));
-//   }
-
-//   const { studentId, courseId } = decoded;
-
-//   const course = await Course.findById(courseId);
-//   const user = await User.findById(studentId);
-
-//   if (!course || !user) {
-//     return next(new AppError('User or course not found', 404));
-//   }
-
-//   user.enrolledCourses.push(courseId);
-//   await user.save();
-
-//   res.status(200).json({
-//     status: 'success',
-//     message: 'Payment confirmed and course added to profile',
-//   });
-// });
