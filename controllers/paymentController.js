@@ -82,7 +82,6 @@ exports.requestPayment = catchAsync(async (req, res, next) => {
     return res.status(200).json({ url: payUrl, authority });
   }
 
-  // other codes -> return error with info if available
   return next(new AppError('خطا در ایجاد تراکنش پرداخت', 400));
 });
 
@@ -92,21 +91,17 @@ exports.verifyPayment = catchAsync(async (req, res, next) => {
   if (!Authority)
     return next(new AppError('پارامتر Authority موجود نیست', 400));
 
-  // find the payment created earlier
   const payment = await Payment.findOne({ authority: Authority });
   if (!payment) {
-    // still try to call verify? safer to return not found
     return next(new AppError('پرداخت پیدا نشد', 404));
   }
 
-  // if user cancelled on gateway
   if (Status !== 'OK') {
     payment.status = 'failed';
     await payment.save().catch(() => {});
     return res.status(400).json({ success: false, message: 'پرداخت لغو شد' });
   }
 
-  // call verify endpoint
   const verifyPayload = {
     merchant_id: process.env.ZARINPAL_MERCHANT_ID,
     amount: payment.amount, // stored in RIAL
@@ -121,11 +116,9 @@ exports.verifyPayment = catchAsync(async (req, res, next) => {
   const data = response.data;
   const code = data?.data?.code;
 
-  // success codes: 100 (first confirm), 101 (already confirmed)
   if (code === 100 || code === 101) {
     const refId = data.data.ref_id || null;
 
-    // store success, ref_id and any optional fields
     payment.status = 'success';
     payment.ref_id = refId;
     if (data.data.card_pan) payment.card_pan = data.data.card_pan;
@@ -133,7 +126,6 @@ exports.verifyPayment = catchAsync(async (req, res, next) => {
     payment.verifiedAt = new Date();
     await payment.save();
 
-    // Enroll user to course idempotently
     if (payment.course) {
       await User.findByIdAndUpdate(payment.student, {
         $addToSet: { enrolledCourses: payment.course },
@@ -171,7 +163,7 @@ exports.verifyPayment = catchAsync(async (req, res, next) => {
     });
   }
 
-  // failed: update payment and return errors if available
+ 
   payment.status = 'failed';
   await payment.save().catch(() => {});
 

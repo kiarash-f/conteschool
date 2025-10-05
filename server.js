@@ -10,7 +10,7 @@ process.on('uncaughtException', (err) => {
 });
 
 // ✅ Load environment variables
-// Priority: .env for normal usage | .env.test for testing
+
 const envFile = process.env.NODE_ENV === 'test' ? './.env.test' : './.env';
 dotenv.config({ path: envFile });
 
@@ -36,7 +36,7 @@ mongoose
     process.exit(1);
   });
 
-// ✅ Start server (only if not in test mode)
+// ✅ Start server
 let server;
 if (process.env.NODE_ENV !== 'test') {
   const port = process.env.PORT || 3000;

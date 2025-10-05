@@ -26,12 +26,13 @@ exports.createNews = catchAsync(async (req, res, next) => {
     req.body.Image = `https://conteschool.ir/uploads/${req.files['Image'][0].filename}`;
   }
   if (req.files && req.files['newsImages']) {
-    req.body.courseImages = req.files['newsImages'].map(
+    req.body.newsImages = req.files['newsImages'].map(
       (file) => `https://conteschool.ir/uploads/${file.filename}`
     );
   }
 
   const newNews = await News.create(req.body);
+
   res.status(201).json({
     status: 'success',
     data: { news: newNews },
@@ -42,7 +43,7 @@ exports.updateNews = catchAsync(async (req, res, next) => {
     req.body.Image = `https://conteschool.ir/uploads/${req.files['Image'][0].filename}`;
   }
   if (req.files && req.files['newsImages']) {
-    req.body.courseImages = req.files['newsImages'].map(
+    req.body.newsImages = req.files['newsImages'].map(
       (file) => `https://conteschool.ir/uploads/${file.filename}`
     );
   }
