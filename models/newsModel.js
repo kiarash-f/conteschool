@@ -18,6 +18,10 @@ const newsSchema = new mongoose.Schema(
     badge: {
       type: String,
     },
+    startDate: {
+      type: Date,
+      required: [true, 'A course must have a start date'],
+    },
     newsImages: {
       type: [String],
       required: [true, 'A course must have course images'],
