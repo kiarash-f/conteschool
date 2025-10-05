@@ -1,6 +1,5 @@
-// const Kavenegar = require('kavenegar');
 const dotenv = require('dotenv');
-dotenv.config({ path: './config.env' });
+dotenv.config({ path: './.env' });
 const { MessageWay, isMessageWayError } = require('messageway');
 
 const otpStore = {};
@@ -43,7 +42,6 @@ const sendOtpSMS = async (phone) => {
       length: 6,
       expireTime: 120,
       method: 'sms',
-      // params: ['1234'], // Use if your SMS template needs variables
     });
     console.log('SMS sent. Reference ID:', referenceID);
     return referenceID;
@@ -61,8 +59,8 @@ const notifyAdminSMS = async (payment, course, student) => {
 کد پیگیری: ${payment.ref_id}`;
 
     const referenceID = await message.sendSMS({
-      mobile: process.env.ADMIN_MOBILE, // set this in config.env
-      message: text, // free text template
+      mobile: process.env.ADMIN_MOBILE,
+      message: text,
       method: 'sms',
     });
 
