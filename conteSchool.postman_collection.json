@@ -18,7 +18,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZDkyMDE4NjZjY2U5MzI1MjAzNDQzMyIsImlhdCI6MTc1OTA1OTk5MiwiZXhwIjoxNzU5NjY0NzkyfQ.gwMuQPLJmP56EjLfdJLGX4baNJ1xcSjqdvHQ6CMMhp0",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZDdjN2ZiOTJlM2JmNjE1YjhiYzUyYyIsImlhdCI6MTc1OTY2ODE1MywiZXhwIjoxNzYwMjcyOTUzfQ.UtAeqSSHE3DT5cxAdJZyCtix3sOUMsOE6U03AvOxElk",
 									"type": "string"
 								}
 							]
@@ -47,7 +47,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MjRiZmUxMzQ4MWRiMDU0OTkxNTlhNiIsImlhdCI6MTc0ODU4NzQ3OSwiZXhwIjoxNzQ5MTkyMjc5fQ.1gUp7ilRuPcod5iZPpm1m61raJSUUOLT4Wat855TkNc",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZDdjN2ZiOTJlM2JmNjE1YjhiYzUyYyIsImlhdCI6MTc1OTY2ODE1MywiZXhwIjoxNzYwMjcyOTUzfQ.UtAeqSSHE3DT5cxAdJZyCtix3sOUMsOE6U03AvOxElk",
 									"type": "string"
 								}
 							]
@@ -55,7 +55,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{base_url}}/api/v1/users/6824bfe13481db05499159a6",
+							"raw": "{{base_url}}/api/v1/users/68dafe4e21c22380d206deea",
 							"host": [
 								"{{base_url}}"
 							],
@@ -63,7 +63,7 @@
 								"api",
 								"v1",
 								"users",
-								"6824bfe13481db05499159a6"
+								"68dafe4e21c22380d206deea"
 							]
 						}
 					},
@@ -184,7 +184,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"phone\": \"09111856900\",\r\n     \"otp\":\"591955\"\r\n\r\n    // \"method\": \"sms\",\r\n    // \"templateID\": 15472\r\n   \r\n\r\n}\r\n",
+							"raw": "{\r\n    \"phone\": \"09981530861\",\r\n     \"otp\":\"801027\"\r\n\r\n    // \"method\": \"sms\",\r\n    // \"templateID\": 15472\r\n   \r\n\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -615,7 +615,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{base_url}}/api/v1/courses/68345f4318cfa37b3d4218b2",
+							"raw": "{{base_url}}/api/v1/courses/68e21a4c3eaa7e244aef212f",
 							"host": [
 								"{{base_url}}"
 							],
@@ -623,7 +623,7 @@
 								"api",
 								"v1",
 								"courses",
-								"68345f4318cfa37b3d4218b2"
+								"68e21a4c3eaa7e244aef212f"
 							]
 						}
 					},
@@ -670,7 +670,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MjRiZmUxMzQ4MWRiMDU0OTkxNTlhNiIsImlhdCI6MTc0OTczOTcyNiwiZXhwIjoxNzUwMzQ0NTI2fQ.3_dC05ncAU_H_kigUmrkMHlzpDNA2b-z2u2Q_uHfwBM",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZDdjN2ZiOTJlM2JmNjE1YjhiYzUyYyIsImlhdCI6MTc1OTY2ODE1MywiZXhwIjoxNzYwMjcyOTUzfQ.UtAeqSSHE3DT5cxAdJZyCtix3sOUMsOE6U03AvOxElk",
 									"type": "string"
 								}
 							]
@@ -688,7 +688,7 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "{{base_url}}/api/v1/courses/68345f4318cfa37b3d4218b2/enrolled-students",
+							"raw": "{{base_url}}/api/v1/courses/68e21a4c3eaa7e244aef212f/enrolled-students",
 							"host": [
 								"{{base_url}}"
 							],
@@ -696,7 +696,7 @@
 								"api",
 								"v1",
 								"courses",
-								"68345f4318cfa37b3d4218b2",
+								"68e21a4c3eaa7e244aef212f",
 								"enrolled-students"
 							]
 						}
@@ -791,7 +791,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MjRiZmUxMzQ4MWRiMDU0OTkxNTlhNiIsImlhdCI6MTc1MTI2ODA1MSwiZXhwIjoxNzUxODcyODUxfQ.S17OvVReIH5CwiRcCPl5Ba4Fnoe-D4Kmh84EkcSGxpc",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZDdjN2ZiOTJlM2JmNjE1YjhiYzUyYyIsImlhdCI6MTc1OTY2NjIyMCwiZXhwIjoxNzYwMjcxMDIwfQ.7P_Umm-dEyPmB6YqKATJvBDVUNnSqeqkXbYgFyc7ANY",
 									"type": "string"
 								}
 							]
@@ -811,7 +811,7 @@
 									"key": "Image",
 									"contentType": "multipart/form-data",
 									"type": "file",
-									"src": "/C:/Users/USER/OneDrive/Desktop/contevisualschool/public/IMG-20250609-WA0008.jpg"
+									"src": "/C:/Users/USER/OneDrive/Pictures/conte.png"
 								},
 								{
 									"key": "description",
@@ -821,6 +821,19 @@
 								{
 									"key": "title",
 									"value": "testsss",
+									"type": "text"
+								},
+								{
+									"key": "newsImages",
+									"type": "file",
+									"src": [
+										"/C:/Users/USER/OneDrive/Pictures/conte.png",
+										"/C:/Users/USER/OneDrive/Pictures/conte.png"
+									]
+								},
+								{
+									"key": "startDate",
+									"value": "2025-10-06",
 									"type": "text"
 								}
 							]
@@ -875,19 +888,39 @@
 				{
 					"name": "Update News",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZDdjN2ZiOTJlM2JmNjE1YjhiYzUyYyIsImlhdCI6MTc1OTY2NjIyMCwiZXhwIjoxNzYwMjcxMDIwfQ.7P_Umm-dEyPmB6YqKATJvBDVUNnSqeqkXbYgFyc7ANY",
+									"type": "string"
+								}
+							]
+						},
 						"method": "PATCH",
 						"header": [],
 						"body": {
-							"mode": "raw",
-							"raw": "{\r\n  \"title\": \"Updated News Title\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "newsImages",
+									"type": "file",
+									"src": [
+										"/C:/Users/USER/OneDrive/Pictures/1747177851606.jpeg",
+										"/C:/Users/USER/OneDrive/Pictures/1747177851606.jpeg",
+										"/C:/Users/USER/OneDrive/Pictures/1747177851606.jpeg"
+									]
+								},
+								{
+									"key": "Image",
+									"type": "file",
+									"src": "/C:/Users/USER/OneDrive/Pictures/1747177851606.jpeg"
 								}
-							}
+							]
 						},
 						"url": {
-							"raw": "{{base_url}}/api/v1/news/6824abc63d377afd319d50a1",
+							"raw": "{{base_url}}/api/v1/news/68e25c1bbfec20bdcd8a00b1",
 							"host": [
 								"{{base_url}}"
 							],
@@ -895,7 +928,7 @@
 								"api",
 								"v1",
 								"news",
-								"6824abc63d377afd319d50a1"
+								"68e25c1bbfec20bdcd8a00b1"
 							]
 						}
 					},
@@ -1240,10 +1273,20 @@
 				{
 					"name": "Verify Payment",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZDdjN2ZiOTJlM2JmNjE1YjhiYzUyYyIsImlhdCI6MTc1OTY2ODE1MywiZXhwIjoxNzYwMjcyOTUzfQ.UtAeqSSHE3DT5cxAdJZyCtix3sOUMsOE6U03AvOxElk",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{base_url}}/api/v1/payments/verify",
+							"raw": "{{base_url}}/api/v1/payments/verify?Authority=<auth>&Status=OK&return=json",
 							"host": [
 								"{{base_url}}"
 							],
@@ -1252,6 +1295,46 @@
 								"v1",
 								"payments",
 								"verify"
+							],
+							"query": [
+								{
+									"key": "Authority",
+									"value": "<auth>"
+								},
+								{
+									"key": "Status",
+									"value": "OK"
+								},
+								{
+									"key": "return",
+									"value": "json"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Result",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/payments/result?authority=<auth>",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"payments",
+								"result"
+							],
+							"query": [
+								{
+									"key": "authority",
+									"value": "<auth>"
+								}
 							]
 						}
 					},
