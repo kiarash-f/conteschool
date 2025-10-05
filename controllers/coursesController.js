@@ -145,7 +145,6 @@ exports.getAllEnrolledStudents = catchAsync(async (req, res, next) => {
     data: { students },
   });
 });
-
 exports.addUserToCourse = catchAsync(async (req, res, next) => {
   const { userId, courseId } = req.params;
 
