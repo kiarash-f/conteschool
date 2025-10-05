@@ -1,5 +1,4 @@
 // controllers/paymentController.js
-const mongoose = require('mongoose');
 const axios = require('axios');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
@@ -53,9 +52,7 @@ const requestPayment = catchAsync(async (req, res, next) => {
   }
 
   const data = response.data;
-  const code = data?.data?.code;
-
-  if (code === 100 && data.data.authority) {
+  if (data?.data?.code === 100 && data.data.authority) {
     const authority = data.data.authority;
     const payUrl = `${HOST_WEB}/pg/StartPay/${authority}`;
 
@@ -106,7 +103,7 @@ const verifyPayment = catchAsync(async (req, res, next) => {
       : res.redirect(`${FRONT_URL}/payment/result?status=failed`);
   }
 
-  // already confirmed → ensure enrollment, then finish
+  // already confirmed → ensure enrollment
   if (payment.status === 'success' && payment.ref_id) {
     await enrollUserToCourseIdempotent(payment.student, payment.course).catch(
       () => {}
@@ -124,7 +121,7 @@ const verifyPayment = catchAsync(async (req, res, next) => {
         );
   }
 
-  // verify with Zarinpal
+  // verify with Zarinpal (server-to-server)
   let vr;
   try {
     vr = await axios.post(VERIFY_URL, {
@@ -153,9 +150,10 @@ const verifyPayment = catchAsync(async (req, res, next) => {
     payment.verifiedAt = new Date();
     await payment.save();
 
+    // no transactions; do two idempotent updates
     await enrollUserToCourseIdempotent(payment.student, payment.course);
 
-    // notifications (best-effort)
+    // best-effort notifications
     try {
       const [course, student] = await Promise.all([
         payment.course ? Course.findById(payment.course) : null,
@@ -203,8 +201,9 @@ const getPaymentResult = catchAsync(async (req, res, next) => {
   if (!authority) return next(new AppError('authority لازم است', 400));
 
   const p = await Payment.findOne({ authority })
-    .populate('course', 'name price')
-    .populate('student', 'name email')
+    // explicit models so wrong refs don't break populate
+    .populate({ path: 'course', model: 'Course', select: 'name price' })
+    .populate({ path: 'student', model: 'User', select: 'name email' })
     .lean();
 
   if (!p) return next(new AppError('پرداخت پیدا نشد', 404));
@@ -220,41 +219,36 @@ const getPaymentResult = catchAsync(async (req, res, next) => {
   });
 });
 
-// ---------- Helper: atomic & idempotent enrollment ----------
+// ---------- Helper: idempotent enrollment (no transactions) ----------
 async function enrollUserToCourseIdempotent(studentId, courseId) {
   if (!studentId || !courseId) return;
 
-  const session = await mongoose.startSession();
-  try {
-    await session.withTransaction(async () => {
-      await User.updateOne(
-        { _id: studentId, 'enrolledCourses.course': { $ne: courseId } },
-        {
-          $push: {
-            enrolledCourses: {
-              course: courseId,
-              paymentStatus: 'paid',
-              reserved: false,
-              enrolledAt: new Date(),
-            },
+  await Promise.all([
+    // push a proper subdocument if the course isn't already in user's enrolledCourses
+    User.updateOne(
+      { _id: studentId, 'enrolledCourses.course': { $ne: courseId } },
+      {
+        $push: {
+          enrolledCourses: {
+            course: courseId,
+            paymentStatus: 'paid',
+            reserved: false,
+            enrolledAt: new Date(),
           },
         },
-        { session }
-      );
+      }
+    ),
 
-      await Course.updateOne(
-        { _id: courseId, enrolledStudents: { $ne: studentId } },
-        { $addToSet: { enrolledStudents: studentId } },
-        { session }
-      );
-    });
-  } finally {
-    session.endSession();
-  }
+    // add user to course without duplicates
+    Course.updateOne(
+      { _id: courseId, enrolledStudents: { $ne: studentId } },
+      { $addToSet: { enrolledStudents: studentId } }
+    ),
+  ]);
 }
 
 module.exports = {
   requestPayment,
   verifyPayment,
-  getPaymentResult, // keep this exported if you mounted /result
+  getPaymentResult,
 };
