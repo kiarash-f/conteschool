@@ -1,4 +1,5 @@
-// controllers/zarinpalController.js
+// controllers/paymentController.js
+const mongoose = require('mongoose');
 const axios = require('axios');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
@@ -10,8 +11,6 @@ const { notifyAdminSMS, notifyStudentSMS } = require('../utils/sms');
 require('dotenv').config();
 
 const isSandbox = process.env.ZARINPAL_ENV === 'sandbox';
-
-// Host URLs
 const HOST_WEB = isSandbox
   ? 'https://sandbox.zarinpal.com'
   : 'https://www.zarinpal.com';
@@ -28,14 +27,15 @@ const normalizeAmountToRial = (amount, amountIsToman = true) => {
   return amountIsToman ? Math.round(num * 10) : Math.round(num);
 };
 
-exports.requestPayment = catchAsync(async (req, res, next) => {
+// ---------- REQUEST ----------
+const requestPayment = catchAsync(async (req, res, next) => {
   const { amount, description, email, mobile, courseId } = req.body;
   const studentId = req.user && req.user._id;
-  if (!amount || !studentId) {
+  if (!amount || !studentId)
     return next(new AppError('پارامترهای لازم ارسال نشده‌اند', 400));
-  }
 
   const amountRial = normalizeAmountToRial(amount);
+  if (!amountRial) return next(new AppError('مبلغ نامعتبر است', 400));
 
   const payload = {
     merchant_id: process.env.ZARINPAL_MERCHANT_ID,
@@ -45,11 +45,12 @@ exports.requestPayment = catchAsync(async (req, res, next) => {
     metadata: { email, mobile },
   };
 
-  // call Zarinpal request
-  const response = await axios.post(REQ_URL, payload).catch((err) => {
-    // network / 5xx handling
+  let response;
+  try {
+    response = await axios.post(REQ_URL, payload);
+  } catch {
     throw new AppError('خطا در ارتباط با درگاه پرداخت', 502);
-  });
+  }
 
   const data = response.data;
   const code = data?.data?.code;
@@ -58,7 +59,6 @@ exports.requestPayment = catchAsync(async (req, res, next) => {
     const authority = data.data.authority;
     const payUrl = `${HOST_WEB}/pg/StartPay/${authority}`;
 
-    // create pending payment record (idempotent: if same authority exists, skip create)
     await Payment.findOneAndUpdate(
       { authority },
       {
@@ -75,101 +75,186 @@ exports.requestPayment = catchAsync(async (req, res, next) => {
       { upsert: true, new: true }
     );
 
-    if (isSandbox) {
+    if (isSandbox)
       console.log('💡 Sandbox Payment Requested:', { authority, payUrl });
-    }
-
     return res.status(200).json({ url: payUrl, authority });
   }
 
   return next(new AppError('خطا در ایجاد تراکنش پرداخت', 400));
 });
 
-exports.verifyPayment = catchAsync(async (req, res, next) => {
+// ---------- VERIFY ----------
+const verifyPayment = catchAsync(async (req, res, next) => {
   const { Authority, Status } = req.query;
+  const FRONT_URL = process.env.FRONT_URL || 'https://conteschool.ir';
+  const WANT_JSON = (req.query.return || '').toLowerCase() === 'json';
 
   if (!Authority)
     return next(new AppError('پارامتر Authority موجود نیست', 400));
 
   const payment = await Payment.findOne({ authority: Authority });
-  if (!payment) {
-    return next(new AppError('پرداخت پیدا نشد', 404));
-  }
+  if (!payment) return next(new AppError('پرداخت پیدا نشد', 404));
 
+  // user canceled
   if (Status !== 'OK') {
-    payment.status = 'failed';
-    await payment.save().catch(() => {});
-    return res.status(400).json({ success: false, message: 'پرداخت لغو شد' });
+    if (payment.status !== 'success') {
+      payment.status = 'failed';
+      await payment.save().catch(() => {});
+    }
+    return WANT_JSON
+      ? res.status(400).json({ success: false, message: 'پرداخت لغو شد' })
+      : res.redirect(`${FRONT_URL}/payment/result?status=failed`);
   }
 
-  const verifyPayload = {
-    merchant_id: process.env.ZARINPAL_MERCHANT_ID,
-    amount: payment.amount, // stored in RIAL
-    authority: Authority,
-  };
+  // already confirmed → ensure enrollment, then finish
+  if (payment.status === 'success' && payment.ref_id) {
+    await enrollUserToCourseIdempotent(payment.student, payment.course).catch(
+      () => {}
+    );
+    return WANT_JSON
+      ? res.status(200).json({
+          success: true,
+          message: 'قبلاً تأیید شده بود',
+          refId: payment.ref_id,
+        })
+      : res.redirect(
+          `${FRONT_URL}/payment/result?authority=${encodeURIComponent(
+            Authority
+          )}`
+        );
+  }
 
-  const response = await axios.post(VERIFY_URL, verifyPayload).catch((err) => {
-    // network error
+  // verify with Zarinpal
+  let vr;
+  try {
+    vr = await axios.post(VERIFY_URL, {
+      merchant_id: process.env.ZARINPAL_MERCHANT_ID,
+      amount: payment.amount, // RIAL from DB
+      authority: Authority,
+    });
+  } catch (e) {
+    console.error(
+      'Zarinpal verify failed:',
+      e?.response?.data || e?.message || e
+    );
     throw new AppError('خطا در ارتباط با سرویس تأیید پرداخت', 502);
-  });
+  }
 
-  const data = response.data;
-  const code = data?.data?.code;
+  const vdata = vr.data;
+  const code = vdata?.data?.code;
 
   if (code === 100 || code === 101) {
-    const refId = data.data.ref_id || null;
+    const refId = vdata.data.ref_id || null;
 
     payment.status = 'success';
     payment.ref_id = refId;
-    if (data.data.card_pan) payment.card_pan = data.data.card_pan;
-    if (data.data.fee !== undefined) payment.fee = data.data.fee;
+    if (vdata.data.card_pan) payment.card_pan = vdata.data.card_pan;
+    if (typeof vdata.data.fee !== 'undefined') payment.fee = vdata.data.fee;
     payment.verifiedAt = new Date();
     await payment.save();
 
-    if (payment.course) {
-      await User.findByIdAndUpdate(payment.student, {
-        $addToSet: { enrolledCourses: payment.course },
-      });
-    }
+    await enrollUserToCourseIdempotent(payment.student, payment.course);
 
-    // fetch course/user for notification
-    const course = payment.course
-      ? await Course.findById(payment.course)
-      : null;
-    const student = await User.findById(payment.student);
-
-    // Notify admin & student (if notifyStudentSMS exists)
+    // notifications (best-effort)
     try {
-      await notifyAdminSMS(payment, course, student);
-    } catch (e) {
-      console.error('notifyAdminSMS error:', e);
-    }
-
-    try {
-      if (typeof notifyStudentSMS === 'function') {
+      const [course, student] = await Promise.all([
+        payment.course ? Course.findById(payment.course) : null,
+        User.findById(payment.student),
+      ]);
+      if (typeof notifyAdminSMS === 'function')
+        await notifyAdminSMS(payment, course, student);
+      if (typeof notifyStudentSMS === 'function')
         await notifyStudentSMS(payment, course, student);
-      }
     } catch (e) {
-      console.error('notifyStudentSMS error:', e);
+      console.error('notify error:', e);
     }
 
-    return res.status(200).json({
-      success: true,
-      message:
-        code === 100
-          ? 'پرداخت با موفقیت تأیید شد'
-          : 'تراکنش قبلاً تأیید شده بود',
-      refId,
-    });
+    return WANT_JSON
+      ? res.status(200).json({
+          success: true,
+          message:
+            code === 100
+              ? 'پرداخت با موفقیت تأیید شد'
+              : 'تراکنش قبلاً تأیید شده بود',
+          refId,
+        })
+      : res.redirect(
+          `${FRONT_URL}/payment/result?authority=${encodeURIComponent(
+            Authority
+          )}`
+        );
   }
 
- 
+  // failed
   payment.status = 'failed';
   await payment.save().catch(() => {});
+  return WANT_JSON
+    ? res.status(400).json({
+        success: false,
+        message: 'پرداخت ناموفق بود',
+        errors: vdata?.errors || vdata,
+      })
+    : res.redirect(`${FRONT_URL}/payment/result?status=failed`);
+});
 
-  return res.status(400).json({
-    success: false,
-    message: 'پرداخت ناموفق بود',
-    errors: data?.errors || data,
+// ---------- RESULT (frontend helper) ----------
+const getPaymentResult = catchAsync(async (req, res, next) => {
+  const { authority } = req.query;
+  if (!authority) return next(new AppError('authority لازم است', 400));
+
+  const p = await Payment.findOne({ authority })
+    .populate('course', 'name price')
+    .populate('student', 'name email')
+    .lean();
+
+  if (!p) return next(new AppError('پرداخت پیدا نشد', 404));
+
+  res.json({
+    success: p.status === 'success',
+    refId: p.ref_id,
+    amount: p.amount,
+    course: p.course,
+    student: p.student,
+    description: p.description,
+    createdAt: p.createdAt,
   });
 });
+
+// ---------- Helper: atomic & idempotent enrollment ----------
+async function enrollUserToCourseIdempotent(studentId, courseId) {
+  if (!studentId || !courseId) return;
+
+  const session = await mongoose.startSession();
+  try {
+    await session.withTransaction(async () => {
+      await User.updateOne(
+        { _id: studentId, 'enrolledCourses.course': { $ne: courseId } },
+        {
+          $push: {
+            enrolledCourses: {
+              course: courseId,
+              paymentStatus: 'paid',
+              reserved: false,
+              enrolledAt: new Date(),
+            },
+          },
+        },
+        { session }
+      );
+
+      await Course.updateOne(
+        { _id: courseId, enrolledStudents: { $ne: studentId } },
+        { $addToSet: { enrolledStudents: studentId } },
+        { session }
+      );
+    });
+  } finally {
+    session.endSession();
+  }
+}
+
+module.exports = {
+  requestPayment,
+  verifyPayment,
+  getPaymentResult, // keep this exported if you mounted /result
+};
