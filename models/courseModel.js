@@ -35,10 +35,6 @@ const courseSchema = new mongoose.Schema({
     type: [String],
     required: [true, 'A course must have course images'],
   },
-  startDate: {
-    type: Date,
-    required: [true, 'A course must have a start date'],
-  },
   badge: {
     type: String,
   },
