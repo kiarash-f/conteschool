@@ -16,4 +16,5 @@ const upload = multer({ storage: storage });
 exports.imageUpload = upload.fields([
   { name: 'Image', maxCount: 1 },
   { name: 'courseImages', maxCount: 10 },
+  { name: 'newsImages', maxCount: 10 },
 ]);

@@ -18,7 +18,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MjRiZmUxMzQ4MWRiMDU0OTkxNTlhNiIsImlhdCI6MTc1MTYxNDc3OCwiZXhwIjoxNzUyMjE5NTc4fQ.eMjj1bOpXw56gfAU2uEgti0eAfpL9S1lS2e9B0XeJZs",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZDkyMDE4NjZjY2U5MzI1MjAzNDQzMyIsImlhdCI6MTc1OTA1OTk5MiwiZXhwIjoxNzU5NjY0NzkyfQ.gwMuQPLJmP56EjLfdJLGX4baNJ1xcSjqdvHQ6CMMhp0",
 									"type": "string"
 								}
 							]
@@ -147,7 +147,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n \r\n  \"name\": \"kia\",\r\n  \"phone\": \"09022119299\",\r\n  \"email\":\"kia@gmail.com\"\r\n\r\n\r\n}\r\n",
+							"raw": "{\r\n \r\n  \"name\": \"kiarash\",\r\n  \"phone\": \"09127119299\",\r\n  \"email\":\"kiarash@gmail.com\",\r\n  \"role\":\"admin\"\r\n\r\n\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -155,9 +155,11 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url}}/api/v1/users/signup",
+							"raw": "https://conteschool.ir/api/v1/users/signup",
+							"protocol": "https",
 							"host": [
-								"{{base_url}}"
+								"conteschool",
+								"ir"
 							],
 							"path": [
 								"api",
@@ -182,7 +184,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"phone\": \"09127119299\",\r\n     \"otp\":\"395923\"\r\n\r\n    // \"method\": \"sms\",\r\n    // \"templateID\": 15472\r\n   \r\n\r\n}\r\n",
+							"raw": "{\r\n    \"phone\": \"09111856900\",\r\n     \"otp\":\"591955\"\r\n\r\n    // \"method\": \"sms\",\r\n    // \"templateID\": 15472\r\n   \r\n\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -334,7 +336,7 @@
 						"method": "POST",
 						"header": [],
 						"url": {
-							"raw": "{{base_url}}/api/v1/users/68d7da3e92cfe33686b01dec/courses/68dab98d646028ab1f3939ab",
+							"raw": "{{base_url}}/api/v1/users/68dafe4e21c22380d206deea/courses/68db072721c22380d206e0cb",
 							"host": [
 								"{{base_url}}"
 							],
@@ -342,9 +344,9 @@
 								"api",
 								"v1",
 								"users",
-								"68d7da3e92cfe33686b01dec",
+								"68dafe4e21c22380d206deea",
 								"courses",
-								"68dab98d646028ab1f3939ab"
+								"68db072721c22380d206e0cb"
 							]
 						}
 					},
@@ -366,7 +368,7 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{base_url}}/api/v1/users/68d7da3e92cfe33686b01dec/courses/68dab98d646028ab1f3939ab",
+							"raw": "{{base_url}}/api/v1/users/68dafe4e21c22380d206deea/courses/68db072721c22380d206e0cb",
 							"host": [
 								"{{base_url}}"
 							],
@@ -374,9 +376,9 @@
 								"api",
 								"v1",
 								"users",
-								"68d7da3e92cfe33686b01dec",
+								"68dafe4e21c22380d206deea",
 								"courses",
-								"68dab98d646028ab1f3939ab"
+								"68db072721c22380d206e0cb"
 							]
 						}
 					},
@@ -414,7 +416,7 @@
 							"formdata": [
 								{
 									"key": "name",
-									"value": "دوره طراحی خیار",
+									"value": "ldjsfdjfdjlfdfhadf12121212",
 									"type": "text"
 								},
 								{
@@ -446,6 +448,11 @@
 									"key": "Image",
 									"type": "file",
 									"src": "/D:/contevisualschool/uploads/1749746050339-687637961.jpg"
+								},
+								{
+									"key": "maxcapacity",
+									"value": "10",
+									"type": "text"
 								}
 							]
 						},
@@ -515,7 +522,8 @@
 									"});"
 								],
 								"type": "text/javascript",
-								"packages": {}
+								"packages": {},
+								"requests": {}
 							}
 						}
 					],
@@ -534,9 +542,11 @@
 							]
 						},
 						"url": {
-							"raw": "{{base_url}}/api/v1/courses",
+							"raw": "https://conteschool.ir/api/v1/courses",
+							"protocol": "https",
 							"host": [
-								"{{base_url}}"
+								"conteschool",
+								"ir"
 							],
 							"path": [
 								"api",
@@ -1192,13 +1202,20 @@
 					"name": "Request Payment",
 					"request": {
 						"auth": {
-							"type": "noauth"
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZGFmZTRlMjFjMjIzODBkMjA2ZGVlYSIsImlhdCI6MTc1OTY2MzQ4NCwiZXhwIjoxNzYwMjY4Mjg0fQ.WV8viF1xd13Oo0gCDYdGdyVdsF1Y_ocZoFGQI9X8rQs",
+									"type": "string"
+								}
+							]
 						},
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"amount\": 10000,\r\n  \"description\": \"پرداخت هزینه دوره طراحی\",\r\n  \"email\": \"user@example.com\",\r\n  \"mobile\": \"09123456789\",\r\n  \"courseId\": \"64a321aaa4bc12345\"\r\n}",
+							"raw": "{\r\n  \"amount\": 10000,\r\n  \"description\": \"پرداخت هزینه دوره طراحی\",\r\n  \"email\": \"mahan@gmail.com\",\r\n  \"mobile\": \"09111356900\",\r\n  \"courseId\": \"68e21a4c3eaa7e244aef212f\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
