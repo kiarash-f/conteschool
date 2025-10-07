@@ -246,9 +246,27 @@ async function enrollUserToCourseIdempotent(studentId, courseId) {
     ),
   ]);
 }
+const getAllPayments = catchAsync(async (req, res, next) => {
+  // (Optional) only allow ADMIN users
+  if (!req.user || req.user.role !== 'admin') {
+    return next(new AppError('Not authorized', 403));
+  }
+
+  const payments = await Payment.find()
+    .populate('student', 'name email phone')
+    .populate('course', 'name price')
+    .sort({ createdAt: -1 });
+
+  res.status(200).json({
+    status: 'success',
+    results: payments.length,
+    data: { payments },
+  });
+});
 
 module.exports = {
   requestPayment,
   verifyPayment,
   getPaymentResult,
+  getAllPayments,
 };
