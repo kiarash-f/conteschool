@@ -1,4 +1,3 @@
-// controllers/paymentController.js
 const axios = require('axios');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
@@ -72,6 +71,36 @@ const requestPayment = catchAsync(async (req, res, next) => {
       { upsert: true, new: true }
     );
 
+    if (courseId) {
+      const upd = await User.updateOne(
+        { _id: studentId, 'enrolledCourses.course': courseId },
+        {
+          $set: {
+            'enrolledCourses.$.paymentStatus': 'pending',
+            'enrolledCourses.$.reserved': true,
+            'enrolledCourses.$.payment.authority': authority,
+          },
+        }
+      );
+
+      if (upd.matchedCount === 0) {
+        await User.updateOne(
+          { _id: studentId },
+          {
+            $push: {
+              enrolledCourses: {
+                course: courseId,
+                paymentStatus: 'pending',
+                reserved: true,
+                enrolledAt: new Date(),
+                payment: { authority, refId: null },
+              },
+            },
+          }
+        );
+      }
+    }
+
     if (isSandbox)
       console.log('💡 Sandbox Payment Requested:', { authority, payUrl });
     return res.status(200).json({ url: payUrl, authority });
@@ -108,6 +137,24 @@ const verifyPayment = catchAsync(async (req, res, next) => {
     await enrollUserToCourseIdempotent(payment.student, payment.course).catch(
       () => {}
     );
+
+    if (payment.course) {
+      await User.updateOne(
+        { _id: payment.student, 'enrolledCourses.course': payment.course },
+        {
+          $set: {
+            'enrolledCourses.$.paymentStatus': 'paid',
+            'enrolledCourses.$.reserved': false,
+            'enrolledCourses.$.payment.authority':
+              payment.authority || payment.authority === ''
+                ? payment.authority
+                : null,
+            'enrolledCourses.$.payment.refId': payment.ref_id || null,
+          },
+        }
+      );
+    }
+
     return WANT_JSON
       ? res.status(200).json({
           success: true,
@@ -153,7 +200,21 @@ const verifyPayment = catchAsync(async (req, res, next) => {
     // no transactions; do two idempotent updates
     await enrollUserToCourseIdempotent(payment.student, payment.course);
 
-    // best-effort notifications
+    if (payment.course) {
+      await User.updateOne(
+        { _id: payment.student, 'enrolledCourses.course': payment.course },
+        {
+          $set: {
+            'enrolledCourses.$.paymentStatus': 'paid',
+            'enrolledCourses.$.reserved': false,
+            'enrolledCourses.$.enrolledAt': new Date(),
+            'enrolledCourses.$.payment.authority': payment.authority || null,
+            'enrolledCourses.$.payment.refId': refId || null,
+          },
+        }
+      );
+    }
+
     try {
       const [course, student] = await Promise.all([
         payment.course ? Course.findById(payment.course) : null,
@@ -224,7 +285,6 @@ async function enrollUserToCourseIdempotent(studentId, courseId) {
   if (!studentId || !courseId) return;
 
   await Promise.all([
-    // push a proper subdocument if the course isn't already in user's enrolledCourses
     User.updateOne(
       { _id: studentId, 'enrolledCourses.course': { $ne: courseId } },
       {
@@ -246,8 +306,8 @@ async function enrollUserToCourseIdempotent(studentId, courseId) {
     ),
   ]);
 }
+
 const getAllPayments = catchAsync(async (req, res, next) => {
-  // (Optional) only allow ADMIN users
   if (!req.user || req.user.role !== 'admin') {
     return next(new AppError('Not authorized', 403));
   }

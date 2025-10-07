@@ -28,21 +28,25 @@ const userSchema = new mongoose.Schema({
     enum: ['student', 'admin'],
     default: 'student',
   },
-  course:{
+  course: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Course',
   },
-enrolledCourses: [
-  {
-    course: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Course'
+  enrolledCourses: [
+    {
+      course: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Course',
+      },
+      paymentStatus: { type: String, default: 'pending' },
+      reserved: { type: Boolean, default: false },
+      enrolledAt: { type: Date, default: Date.now },
+      payment: {
+        authority: { type: String, default: null },
+        refId: { type: String, default: null },
+      },
     },
-    paymentStatus: { type: String, default: 'pending' },
-    reserved: { type: Boolean, default: false },
-    enrolledAt: { type: Date, default: Date.now }
-  }
-],
+  ],
 
   createdAt: {
     type: Date,
