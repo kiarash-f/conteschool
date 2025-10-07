@@ -148,22 +148,32 @@ exports.getAllEnrolledStudents = catchAsync(async (req, res, next) => {
 exports.addUserToCourse = catchAsync(async (req, res, next) => {
   const { userId, courseId } = req.params;
 
-  const user = await User.findById(userId);
-  if (!user) {
-    return next(new AppError('User not found', 404));
-  }
-  const course = await Course.findById(courseId);
-  if (!course) {
-    return next(new AppError('Course not found', 404));
-  }
+  const [user, course] = await Promise.all([
+    User.findById(userId),
+    Course.findById(courseId),
+  ]);
+  if (!user) return next(new AppError('User not found', 404));
+  if (!course) return next(new AppError('Course not found', 404));
   if (course.availableSeats <= 0) {
     return next(new AppError('No available seats in this course', 400));
   }
-  user.enrolledCourses.push(courseId);
-  await user.save();
-  course.enrolledStudents.push(userId);
+
+  // avoid duplicates
+  const already = (user.enrolledCourses || []).some(
+    (ec) => ec.course?.toString() === courseId
+  );
+  if (already) {
+    return res
+      .status(200)
+      .json({ status: 'success', message: 'User already enrolled' });
+  }
+
+  user.enrolledCourses.push({ course: course._id }); // defaults handle the rest
+  course.enrolledStudents.push(user._id);
   course.availableSeats -= 1;
-  await course.save();
+
+  await Promise.all([user.save(), course.save()]);
+
   res.status(200).json({
     status: 'success',
     message: 'User enrolled in course successfully',
@@ -172,34 +182,30 @@ exports.addUserToCourse = catchAsync(async (req, res, next) => {
 exports.removeStudentFromCourse = catchAsync(async (req, res, next) => {
   const { userId, courseId } = req.params;
 
-  const user = await User.findById(userId);
-  if (!user) {
-    return next(new AppError('User not found', 404));
-  }
+  const [user, course] = await Promise.all([
+    User.findById(userId),
+    Course.findById(courseId),
+  ]);
+  if (!user) return next(new AppError('User not found', 404));
+  if (!course) return next(new AppError('Course not found', 404));
 
-  const course = await Course.findById(courseId);
-  if (!course) {
-    return next(new AppError('Course not found', 404));
-  }
-
-  // remove course from user's enrolledCourses (object array)
+  const before = user.enrolledCourses.length;
   user.enrolledCourses = user.enrolledCourses.filter(
-    (c) => c._id.toString() !== courseId
-  );
-  await user.save();
-
-  // remove user from course's enrolledStudents
-  course.enrolledStudents = course.enrolledStudents.filter(
-    (student) => student.toString() !== userId
+    (ec) => ec.course?.toString() !== courseId
   );
 
-  if (course.availableSeats < course.maxcapacity) {
+  course.enrolledStudents = (course.enrolledStudents || []).filter(
+    (id) => id.toString() !== userId
+  );
+  if (user.enrolledCourses.length < before) {
     course.availableSeats += 1;
   }
-  await course.save();
 
-  res.status(200).json({
-    status: 'success',
-    message: 'User removed from course successfully',
-  });
+  await Promise.all([user.save(), course.save()]);
+  res
+    .status(200)
+    .json({
+      status: 'success',
+      message: 'User removed from course successfully',
+    });
 });
