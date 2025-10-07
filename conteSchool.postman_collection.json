@@ -147,7 +147,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n \r\n  \"name\": \"kiarash\",\r\n  \"phone\": \"09127119299\",\r\n  \"email\":\"kiarash@gmail.com\",\r\n  \"role\":\"admin\"\r\n\r\n\r\n}\r\n",
+							"raw": "{\r\n  \"name\": \"kiarash\",\r\n  \"email\": \"kiarash@gmail.com\",\r\n  \"phone\": \"09127119299\"\r\n}\r\n\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -184,7 +184,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"phone\": \"09981530861\",\r\n     \"otp\":\"801027\"\r\n\r\n    // \"method\": \"sms\",\r\n    // \"templateID\": 15472\r\n   \r\n\r\n}\r\n",
+							"raw": "{\r\n    \"phone\": \"09127119299\"\r\n    //  \"otp\":\"801027\"\r\n\r\n    // \"method\": \"sms\",\r\n    // \"templateID\": 15472\r\n   \r\n\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1335,6 +1335,36 @@
 									"key": "authority",
 									"value": "<auth>"
 								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Payments",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZDdjN2ZiOTJlM2JmNjE1YjhiYzUyYyIsImlhdCI6MTc1OTg0Mjk2OSwiZXhwIjoxNzYwNDQ3NzY5fQ.lkJDKDzDFLCXrooEbXsrSeHJX9fk0VWWKDBixToxB_0",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/payments/all",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"payments",
+								"all"
 							]
 						}
 					},

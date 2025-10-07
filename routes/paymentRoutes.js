@@ -18,4 +18,11 @@ router.get('/verify', paymentController.verifyPayment);
 // Optional: frontend pulls final status/details by authority
 router.get('/result', paymentController.getPaymentResult);
 
+router.get(
+  '/all',
+  authController.protect,
+  authController.restrictTo('admin'),
+  paymentController.getAllPayments
+);
+
 module.exports = router;

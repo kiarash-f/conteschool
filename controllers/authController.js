@@ -11,24 +11,32 @@ const signToken = (id) => {
   });
 };
 exports.login = catchAsync(async (req, res, next) => {
-  const { email, phone, otp } = req.body;
-  const key = phone || email;
+  let { email, phone, otp } = req.body;
 
-  if (!key) {
+  email = email?.trim().toLowerCase();
+  phone = phone?.trim();
+
+  if (!email && !phone) {
     return next(new AppError('Please provide phone or email', 400));
   }
 
+  const user = await User.findOne(phone ? { phone } : { email });
+
   if (!otp) {
+    if (!user) {
+      return next(new AppError('User not found. Please sign up first.', 404));
+    }
+
     try {
       if (phone) {
-        await sendOtpSMS(phone); // MessageWay generates & sends OTP
+        await sendOtpSMS(phone);
       } else {
-        sendMockOTP(email, '000000'); // Fallback for email (mock)
+        await sendMockOTP(email, '000000');
       }
     } catch (err) {
-      console.error('SMS sending error:', err);
+      console.error('SMS/email sending error:', err);
       return next(
-        new AppError('خطا در ارسال پیامک. لطفاً دوباره تلاش کنید.', 500)
+        new AppError('خطا در ارسال کد. لطفاً دوباره تلاش کنید.', 500)
       );
     }
 
@@ -38,33 +46,32 @@ exports.login = catchAsync(async (req, res, next) => {
     });
   }
 
-  //  Verify OTP using MessageWay
+  // --- 3) Verify provided OTP ---
   if (phone) {
     try {
-      await message.verify({
-        mobile: phone,
-        otp,
-      });
+      await message.verify({ mobile: phone, otp });
     } catch (error) {
       console.error('OTP verification failed:', error);
       return next(new AppError('Invalid or expired OTP', 400));
     }
+  } else {
+    const isValid = otp === '000000'; // dev only
+    if (!isValid) return next(new AppError('Invalid or expired OTP', 400));
   }
 
-  //  Check user existence
-  const user = await User.findOne(phone ? { phone } : { email });
   if (!user) {
     return next(new AppError('User not found. Please sign up first.', 404));
   }
 
   const token = signToken(user._id);
 
-  res.status(200).json({
+  return res.status(200).json({
     status: 'success',
     token,
     data: { user },
   });
 });
+
 exports.signup = catchAsync(async (req, res, next) => {
   const { name, email, phone, otp } = req.body;
 
