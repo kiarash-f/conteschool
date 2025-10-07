@@ -71,7 +71,6 @@ exports.login = catchAsync(async (req, res, next) => {
     data: { user },
   });
 });
-
 exports.signup = catchAsync(async (req, res, next) => {
   const { name, email, phone, otp } = req.body;
 
