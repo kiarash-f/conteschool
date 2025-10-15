@@ -32,6 +32,9 @@ const requestPayment = catchAsync(async (req, res, next) => {
   if (!amount || !studentId)
     return next(new AppError('پارامترهای لازم ارسال نشده‌اند', 400));
 
+  if (!acceptTnc)
+    return next(new AppError('پذیرش قوانین و مقررات الزامی است', 400));
+
   const amountRial = normalizeAmountToRial(amount);
   if (!amountRial) return next(new AppError('مبلغ نامعتبر است', 400));
 
@@ -79,6 +82,8 @@ const requestPayment = catchAsync(async (req, res, next) => {
             'enrolledCourses.$.paymentStatus': 'pending',
             'enrolledCourses.$.reserved': true,
             'enrolledCourses.$.payment.authority': authority,
+            'enrolledCourses.$.tncAccepted': true,
+            'enrolledCourses.$.tncAcceptedAt': new Date(),
           },
         }
       );
@@ -150,6 +155,19 @@ const verifyPayment = catchAsync(async (req, res, next) => {
                 ? payment.authority
                 : null,
             'enrolledCourses.$.payment.refId': payment.ref_id || null,
+          },
+        }
+      );
+      await User.updateOne(
+        {
+          _id: payment.student,
+          'enrolledCourses.course': payment.course,
+          'enrolledCourses.tncAccepted': { $ne: true },
+        },
+        {
+          $set: {
+            'enrolledCourses.$.tncAccepted': true,
+            'enrolledCourses.$.tncAcceptedAt': new Date(),
           },
         }
       );
@@ -294,7 +312,23 @@ async function enrollUserToCourseIdempotent(studentId, courseId) {
             paymentStatus: 'paid',
             reserved: false,
             enrolledAt: new Date(),
+            tncAccepted: true,
+            tncAcceptedAt: new Date(),
           },
+        },
+      }
+    ),
+
+    User.updateOne(
+      {
+        _id: studentId,
+        'enrolledCourses.course': courseId,
+        'enrolledCourses.tncAccepted': { $ne: true },
+      },
+      {
+        $set: {
+          'enrolledCourses.$.tncAccepted': true,
+          'enrolledCourses.$.tncAcceptedAt': new Date(),
         },
       }
     ),

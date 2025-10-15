@@ -45,6 +45,8 @@ const userSchema = new mongoose.Schema({
         authority: { type: String, default: null },
         refId: { type: String, default: null },
       },
+      tncAccepted: { type: Boolean, default: false },
+      tncAcceptedAt: { type: Date, default: null },
     },
   ],
 
