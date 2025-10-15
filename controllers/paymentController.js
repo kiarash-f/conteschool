@@ -25,15 +25,29 @@ const normalizeAmountToRial = (amount, amountIsToman = true) => {
   return amountIsToman ? Math.round(num * 10) : Math.round(num);
 };
 
+// کمکی: true برای ورودی‌های 'true' | '1' | 'on' | 'yes' هم حساب شود
+const parseAcceptTnc = (val) => {
+  if (val === true) return true;
+  if (val === 1) return true;
+  const s = (val ?? '').toString().toLowerCase().trim();
+  return ['true', '1', 'on', 'yes'].includes(s);
+};
+
 // ---------- REQUEST ----------
 const requestPayment = catchAsync(async (req, res, next) => {
   const { amount, description, email, mobile, courseId } = req.body;
   const studentId = req.user && req.user._id;
-  if (!amount || !studentId)
-    return next(new AppError('پارامترهای لازم ارسال نشده‌اند', 400));
 
-  if (!acceptTnc)
+  const acceptTnc = parseAcceptTnc(req.body?.acceptTnc);
+
+  if (!amount || !studentId) {
+    return next(new AppError('پارامترهای لازم ارسال نشده‌اند', 400));
+  }
+
+  
+  if (!acceptTnc) {
     return next(new AppError('پذیرش قوانین و مقررات الزامی است', 400));
+  }
 
   const amountRial = normalizeAmountToRial(amount);
   if (!amountRial) return next(new AppError('مبلغ نامعتبر است', 400));
@@ -75,6 +89,7 @@ const requestPayment = catchAsync(async (req, res, next) => {
     );
 
     if (courseId) {
+      // اگر قبلاً این دوره وجود داشت → ست کن
       const upd = await User.updateOne(
         { _id: studentId, 'enrolledCourses.course': courseId },
         {
@@ -82,12 +97,14 @@ const requestPayment = catchAsync(async (req, res, next) => {
             'enrolledCourses.$.paymentStatus': 'pending',
             'enrolledCourses.$.reserved': true,
             'enrolledCourses.$.payment.authority': authority,
+            // ✅ ثبت پذیرش قوانین
             'enrolledCourses.$.tncAccepted': true,
             'enrolledCourses.$.tncAcceptedAt': new Date(),
           },
         }
       );
 
+      // اگر نبود → push کن (با فیلدهای TNC)
       if (upd.matchedCount === 0) {
         await User.updateOne(
           { _id: studentId },
@@ -99,6 +116,9 @@ const requestPayment = catchAsync(async (req, res, next) => {
                 reserved: true,
                 enrolledAt: new Date(),
                 payment: { authority, refId: null },
+                // ✅ این قبلاً جا افتاده بود
+                tncAccepted: true,
+                tncAcceptedAt: new Date(),
               },
             },
           }
@@ -150,14 +170,13 @@ const verifyPayment = catchAsync(async (req, res, next) => {
           $set: {
             'enrolledCourses.$.paymentStatus': 'paid',
             'enrolledCourses.$.reserved': false,
-            'enrolledCourses.$.payment.authority':
-              payment.authority || payment.authority === ''
-                ? payment.authority
-                : null,
-            'enrolledCourses.$.payment.refId': payment.ref_id || null,
+            'enrolledCourses.$.payment.authority': payment.authority ?? null,
+            'enrolledCourses.$.payment.refId': payment.ref_id ?? null,
           },
         }
       );
+
+      // اگر قبلاً T&C ست نشده بود، الان ست شود
       await User.updateOne(
         {
           _id: payment.student,
@@ -174,11 +193,13 @@ const verifyPayment = catchAsync(async (req, res, next) => {
     }
 
     return WANT_JSON
-      ? res.status(200).json({
-          success: true,
-          message: 'قبلاً تأیید شده بود',
-          refId: payment.ref_id,
-        })
+      ? res
+          .status(200)
+          .json({
+            success: true,
+            message: 'قبلاً تأیید شده بود',
+            refId: payment.ref_id,
+          })
       : res.redirect(
           `${FRONT_URL}/payment/result?authority=${encodeURIComponent(
             Authority
@@ -215,7 +236,7 @@ const verifyPayment = catchAsync(async (req, res, next) => {
     payment.verifiedAt = new Date();
     await payment.save();
 
-    // no transactions; do two idempotent updates
+    // idempotent ثبت‌نام + افزودن T&C در صورت نیاز
     await enrollUserToCourseIdempotent(payment.student, payment.course);
 
     if (payment.course) {
@@ -226,8 +247,23 @@ const verifyPayment = catchAsync(async (req, res, next) => {
             'enrolledCourses.$.paymentStatus': 'paid',
             'enrolledCourses.$.reserved': false,
             'enrolledCourses.$.enrolledAt': new Date(),
-            'enrolledCourses.$.payment.authority': payment.authority || null,
-            'enrolledCourses.$.payment.refId': refId || null,
+            'enrolledCourses.$.payment.authority': payment.authority ?? null,
+            'enrolledCourses.$.payment.refId': refId ?? null,
+          },
+        }
+      );
+
+      // اگر T&C هنوز ست نشده، الان ست کن
+      await User.updateOne(
+        {
+          _id: payment.student,
+          'enrolledCourses.course': payment.course,
+          'enrolledCourses.tncAccepted': { $ne: true },
+        },
+        {
+          $set: {
+            'enrolledCourses.$.tncAccepted': true,
+            'enrolledCourses.$.tncAcceptedAt': new Date(),
           },
         }
       );
@@ -266,11 +302,13 @@ const verifyPayment = catchAsync(async (req, res, next) => {
   payment.status = 'failed';
   await payment.save().catch(() => {});
   return WANT_JSON
-    ? res.status(400).json({
-        success: false,
-        message: 'پرداخت ناموفق بود',
-        errors: vdata?.errors || vdata,
-      })
+    ? res
+        .status(400)
+        .json({
+          success: false,
+          message: 'پرداخت ناموفق بود',
+          errors: vdata?.errors || vdata,
+        })
     : res.redirect(`${FRONT_URL}/payment/result?status=failed`);
 });
 
@@ -280,7 +318,6 @@ const getPaymentResult = catchAsync(async (req, res, next) => {
   if (!authority) return next(new AppError('authority لازم است', 400));
 
   const p = await Payment.findOne({ authority })
-    // explicit models so wrong refs don't break populate
     .populate({ path: 'course', model: 'Course', select: 'name price' })
     .populate({ path: 'student', model: 'User', select: 'name email' })
     .lean();
@@ -303,6 +340,7 @@ async function enrollUserToCourseIdempotent(studentId, courseId) {
   if (!studentId || !courseId) return;
 
   await Promise.all([
+    // اگر وجود ندارد → اضافه کن با T&C
     User.updateOne(
       { _id: studentId, 'enrolledCourses.course': { $ne: courseId } },
       {
@@ -319,6 +357,7 @@ async function enrollUserToCourseIdempotent(studentId, courseId) {
       }
     ),
 
+    // اگر وجود دارد ولی T&C ست نشده → ست کن
     User.updateOne(
       {
         _id: studentId,
