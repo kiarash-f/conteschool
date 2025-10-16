@@ -6,7 +6,9 @@
   "scripts": {
     "test": "cross-env NODE_ENV=test jest --runInBand",
     "start": "node server.js",
-    "dev": "nodemon server.js"
+    "dev": "nodemon server.js",
+    "perf:100x30:local": "k6 run perf/k6/baseline.js --summary-export perf/k6/results-local.json",
+    "perf:100x30:url": "BASE_URL=$BASE_URL k6 run perf/k6/baseline.js --summary-export perf/k6/results-remote.json"
   },
   "keywords": [],
   "author": "",
@@ -15,11 +17,13 @@
   "dependencies": {
     "axios": "^1.11.0",
     "bcrypt": "^6.0.0",
-    "compression": "^1.8.0",
+    "compression": "^1.8.1",
     "cors": "^2.8.5",
     "crypto": "^1.0.1",
     "dotenv": "^16.5.0",
     "express": "^4.21.2",
+    "express-rate-limit": "^8.1.0",
+    "helmet": "^8.1.0",
     "jsonwebtoken": "^9.0.2",
     "messageway": "^1.2.0",
     "mongoose": "^8.19.0",

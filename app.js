@@ -10,6 +10,11 @@ const newsRoute = require('./routes/newsRoute');
 const studentWorkRoute = require('./routes/studentWorkRoute');
 const reviewRoute = require('./routes/reviewRoute');
 const paymentRoutes = require('./routes/paymentRoutes');
+const health = require('./routes/health');
+
+const helmet = require('helmet');
+
+const rateLimit = require('express-rate-limit');
 
 const app = express();
 
@@ -29,6 +34,8 @@ app.use(
 );
 // ✅ Enable Gzip compression
 app.use(compression());
+app.set('trust proxy', 1);
+app.use(helmet());
 
 // ✅ Logger for development
 app.use(morgan('dev'));
@@ -53,6 +60,7 @@ app.use('/api/v1/news', newsRoute);
 app.use('/api/v1/studentWorks', studentWorkRoute);
 app.use('/api/v1/reviews', reviewRoute);
 app.use('/api/v1/payments', paymentRoutes);
+app.use('/api', health);
 
 app.use(express.static(path.join(__dirname, 'dist')));
 
