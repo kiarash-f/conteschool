@@ -1,0 +1,4 @@
+{
+  "BASE_URL": "http://localhost:3000",
+  "READ_ONLY_ENDPOINTS": ["/api/v1/courses", "/api/v1/news", "/api/health"]
+}
