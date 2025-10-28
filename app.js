@@ -37,6 +37,9 @@ app.use(compression());
 app.set('trust proxy', 1);
 app.use(
   helmet({
+    crossOriginEmbedderPolicy: false,
+
+    crossOriginResourcePolicy: { policy: 'same-site' },
     contentSecurityPolicy: {
       directives: {
         defaultSrc: ["'self'"],
@@ -52,6 +55,7 @@ app.use(
           'blob:',
           'https://conteschool.ir',
           'https://www.conteschool.ir',
+          'https://*.tile.openstreetmap.org',
         ],
         scriptSrc: ["'self'", "'unsafe-inline'"],
         styleSrc: ["'self'", "'unsafe-inline'"],
@@ -72,7 +76,16 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // ✅ Serve uploaded files  from /uploads path
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use(
+  '/uploads',
+  express.static(path.join(__dirname, 'uploads'), {
+    setHeaders: (res) => {
+      res.setHeader('Cross-Origin-Resource-Policy', 'same-site');
+
+      res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+    },
+  })
+);
 
 // ✅ Serve static files from the public directory
 app.use(express.static('public'));
