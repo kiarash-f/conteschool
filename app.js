@@ -35,7 +35,32 @@ app.use(
 // ✅ Enable Gzip compression
 app.use(compression());
 app.set('trust proxy', 1);
-app.use(helmet());
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        connectSrc: [
+          "'self'",
+          'https://conteschool.ir',
+          'https://www.conteschool.ir',
+          'http://localhost:5173',
+        ],
+        imgSrc: [
+          "'self'",
+          'data:',
+          'blob:',
+          'https://conteschool.ir',
+          'https://www.conteschool.ir',
+        ],
+        scriptSrc: ["'self'", "'unsafe-inline'"],
+        styleSrc: ["'self'", "'unsafe-inline'"],
+        fontSrc: ["'self'", 'data:'],
+        frameAncestors: ["'self'"],
+      },
+    },
+  })
+);
 
 // ✅ Logger for development
 app.use(morgan('dev'));
