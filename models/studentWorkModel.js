@@ -31,5 +31,7 @@ const studentWorkSchema = new mongoose.Schema({
 });
 
 
+studentWorkSchema.index({ student: 1 });
+
 const StudentWork = mongoose.model('StudentWork', studentWorkSchema);
 module.exports = StudentWork;

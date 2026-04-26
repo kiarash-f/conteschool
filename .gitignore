@@ -1,4 +1,5 @@
 conteVisualArts-master/
 node_modules/
 uploads/
+.env
 .env/

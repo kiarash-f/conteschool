@@ -67,7 +67,7 @@ app.use(
 );
 
 // ✅ Logger for development
-app.use(morgan('dev'));
+if (process.env.NODE_ENV !== 'production') app.use(morgan('dev'));
 
 // ✅ Parse JSON request bodies
 app.use(express.json());
@@ -89,6 +89,14 @@ app.use(
 
 // ✅ Serve static files from the public directory
 app.use(express.static('public'));
+
+// ✅ Rate limiting
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+  message: 'Too many requests, please try again later.',
+});
+app.use('/api/', limiter);
 
 // ✅ Mount API Routes
 
