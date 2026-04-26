@@ -50,5 +50,7 @@ const newsSchema = new mongoose.Schema(
 //   next();
 // });
 
+newsSchema.index({ createdAt: -1 });
+
 const News = mongoose.model('News', newsSchema);
 module.exports = News;

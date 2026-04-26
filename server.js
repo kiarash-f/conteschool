@@ -14,9 +14,6 @@ process.on('uncaughtException', (err) => {
 const envFile = process.env.NODE_ENV === 'test' ? './.env.test' : './.env';
 dotenv.config({ path: envFile });
 
-console.log(`🧩 Environment loaded from: ${envFile}`);
-console.log(`🚀 NODE_ENV: ${process.env.NODE_ENV}`);
-
 // ✅ Connect to MongoDB
 const DB = process.env.DATABASE;
 
@@ -26,10 +23,7 @@ if (!DB) {
 }
 
 mongoose
-  .connect(DB, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
+  .connect(DB, { maxPoolSize: 10 })
   .then(() => console.log('✅ MongoDB connection established successfully'))
   .catch((err) => {
     console.error('❌ MongoDB connection error:', err.message || err);
