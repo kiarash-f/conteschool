@@ -14,15 +14,15 @@ router.use(authController.protect);
 router.post(
   '/:userId/courses/:courseId',
   authController.restrictTo('admin'),
-  courseController.addUserToCourse
+  courseController.addUserToCourse,
 );
 router.delete(
   '/:userId/courses/:courseId',
   authController.restrictTo('admin'),
-  courseController.removeStudentFromCourse
+  courseController.removeStudentFromCourse,
 );
 
-router.get('/', userController.getAllUsers);
+router.get('/', authController.restrictTo('admin'), userController.getAllUsers);
 
 router.get('/me', authController.getMe, userController.getUser);
 
@@ -30,6 +30,6 @@ router
   .route('/:id')
   .get(userController.getUser)
   .patch(userController.updateUser)
-  .delete(userController.deleteUser);
+  .delete(authController.restrictTo('admin'), userController.deleteUser);
 
 module.exports = router;

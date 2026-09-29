@@ -33,23 +33,31 @@ const parseAcceptTnc = (val) => {
   return ['true', '1', 'on', 'yes'].includes(s);
 };
 
+
 // ---------- REQUEST ----------
 const requestPayment = catchAsync(async (req, res, next) => {
-  const { amount, description, email, mobile, courseId } = req.body;
+  const { description, email, mobile, courseId } = req.body;
   const studentId = req.user && req.user._id;
 
   const acceptTnc = parseAcceptTnc(req.body?.acceptTnc);
 
-  if (!amount || !studentId) {
+  if (!courseId || !studentId) {
     return next(new AppError('پارامترهای لازم ارسال نشده‌اند', 400));
   }
 
-  
   if (!acceptTnc) {
     return next(new AppError('پذیرش قوانین و مقررات الزامی است', 400));
   }
 
-  const amountRial = normalizeAmountToRial(amount);
+  const course = await Course.findById(courseId);
+  if (!course) {
+    return next(new AppError('دوره پیدا نشد', 404));
+  }
+  if (course.availableSeats <= 0) {
+    return next(new AppError('ظرفیت این دوره تکمیل شده است', 400));
+  }
+
+  const amountRial = normalizeAmountToRial(course.price);
   if (!amountRial) return next(new AppError('مبلغ نامعتبر است', 400));
 
   const payload = {
@@ -81,49 +89,43 @@ const requestPayment = catchAsync(async (req, res, next) => {
         email,
         mobile,
         student: studentId,
-        course: courseId || null,
+        course: courseId,
         status: 'pending',
         createdAt: new Date(),
       },
-      { upsert: true, new: true }
+      { upsert: true, new: true },
     );
 
-    if (courseId) {
-      // اگر قبلاً این دوره وجود داشت → ست کن
-      const upd = await User.updateOne(
-        { _id: studentId, 'enrolledCourses.course': courseId },
-        {
-          $set: {
-            'enrolledCourses.$.paymentStatus': 'pending',
-            'enrolledCourses.$.reserved': true,
-            'enrolledCourses.$.payment.authority': authority,
-            // ✅ ثبت پذیرش قوانین
-            'enrolledCourses.$.tncAccepted': true,
-            'enrolledCourses.$.tncAcceptedAt': new Date(),
-          },
-        }
-      );
+    const upd = await User.updateOne(
+      { _id: studentId, 'enrolledCourses.course': courseId },
+      {
+        $set: {
+          'enrolledCourses.$.paymentStatus': 'pending',
+          'enrolledCourses.$.reserved': true,
+          'enrolledCourses.$.payment.authority': authority,
+          'enrolledCourses.$.tncAccepted': true,
+          'enrolledCourses.$.tncAcceptedAt': new Date(),
+        },
+      },
+    );
 
-      // اگر نبود → push کن (با فیلدهای TNC)
-      if (upd.matchedCount === 0) {
-        await User.updateOne(
-          { _id: studentId },
-          {
-            $push: {
-              enrolledCourses: {
-                course: courseId,
-                paymentStatus: 'pending',
-                reserved: true,
-                enrolledAt: new Date(),
-                payment: { authority, refId: null },
-                // ✅ این قبلاً جا افتاده بود
-                tncAccepted: true,
-                tncAcceptedAt: new Date(),
-              },
+    if (upd.matchedCount === 0) {
+      await User.updateOne(
+        { _id: studentId },
+        {
+          $push: {
+            enrolledCourses: {
+              course: courseId,
+              paymentStatus: 'pending',
+              reserved: true,
+              enrolledAt: new Date(),
+              payment: { authority, refId: null },
+              tncAccepted: true,
+              tncAcceptedAt: new Date(),
             },
-          }
-        );
-      }
+          },
+        },
+      );
     }
 
     if (isSandbox)
@@ -160,7 +162,7 @@ const verifyPayment = catchAsync(async (req, res, next) => {
   // already confirmed → ensure enrollment
   if (payment.status === 'success' && payment.ref_id) {
     await enrollUserToCourseIdempotent(payment.student, payment.course).catch(
-      () => {}
+      () => {},
     );
 
     if (payment.course) {
@@ -173,7 +175,7 @@ const verifyPayment = catchAsync(async (req, res, next) => {
             'enrolledCourses.$.payment.authority': payment.authority ?? null,
             'enrolledCourses.$.payment.refId': payment.ref_id ?? null,
           },
-        }
+        },
       );
 
       // اگر قبلاً T&C ست نشده بود، الان ست شود
@@ -188,22 +190,20 @@ const verifyPayment = catchAsync(async (req, res, next) => {
             'enrolledCourses.$.tncAccepted': true,
             'enrolledCourses.$.tncAcceptedAt': new Date(),
           },
-        }
+        },
       );
     }
 
     return WANT_JSON
-      ? res
-          .status(200)
-          .json({
-            success: true,
-            message: 'قبلاً تأیید شده بود',
-            refId: payment.ref_id,
-          })
+      ? res.status(200).json({
+          success: true,
+          message: 'قبلاً تأیید شده بود',
+          refId: payment.ref_id,
+        })
       : res.redirect(
           `${FRONT_URL}/payment/result?authority=${encodeURIComponent(
-            Authority
-          )}`
+            Authority,
+          )}`,
         );
   }
 
@@ -218,7 +218,7 @@ const verifyPayment = catchAsync(async (req, res, next) => {
   } catch (e) {
     console.error(
       'Zarinpal verify failed:',
-      e?.response?.data || e?.message || e
+      e?.response?.data || e?.message || e,
     );
     throw new AppError('خطا در ارتباط با سرویس تأیید پرداخت', 502);
   }
@@ -250,7 +250,7 @@ const verifyPayment = catchAsync(async (req, res, next) => {
             'enrolledCourses.$.payment.authority': payment.authority ?? null,
             'enrolledCourses.$.payment.refId': refId ?? null,
           },
-        }
+        },
       );
 
       // اگر T&C هنوز ست نشده، الان ست کن
@@ -265,7 +265,7 @@ const verifyPayment = catchAsync(async (req, res, next) => {
             'enrolledCourses.$.tncAccepted': true,
             'enrolledCourses.$.tncAcceptedAt': new Date(),
           },
-        }
+        },
       );
     }
 
@@ -293,8 +293,8 @@ const verifyPayment = catchAsync(async (req, res, next) => {
         })
       : res.redirect(
           `${FRONT_URL}/payment/result?authority=${encodeURIComponent(
-            Authority
-          )}`
+            Authority,
+          )}`,
         );
   }
 
@@ -302,13 +302,11 @@ const verifyPayment = catchAsync(async (req, res, next) => {
   payment.status = 'failed';
   await payment.save().catch(() => {});
   return WANT_JSON
-    ? res
-        .status(400)
-        .json({
-          success: false,
-          message: 'پرداخت ناموفق بود',
-          errors: vdata?.errors || vdata,
-        })
+    ? res.status(400).json({
+        success: false,
+        message: 'پرداخت ناموفق بود',
+        errors: vdata?.errors || vdata,
+      })
     : res.redirect(`${FRONT_URL}/payment/result?status=failed`);
 });
 
@@ -335,11 +333,12 @@ const getPaymentResult = catchAsync(async (req, res, next) => {
   });
 });
 
+
 // ---------- Helper: idempotent enrollment (no transactions) ----------
 async function enrollUserToCourseIdempotent(studentId, courseId) {
   if (!studentId || !courseId) return;
 
-  await Promise.all([
+  const [, , courseUpdate] = await Promise.all([
     // اگر وجود ندارد → اضافه کن با T&C
     User.updateOne(
       { _id: studentId, 'enrolledCourses.course': { $ne: courseId } },
@@ -354,7 +353,7 @@ async function enrollUserToCourseIdempotent(studentId, courseId) {
             tncAcceptedAt: new Date(),
           },
         },
-      }
+      },
     ),
 
     // اگر وجود دارد ولی T&C ست نشده → ست کن
@@ -369,15 +368,35 @@ async function enrollUserToCourseIdempotent(studentId, courseId) {
           'enrolledCourses.$.tncAccepted': true,
           'enrolledCourses.$.tncAcceptedAt': new Date(),
         },
-      }
+      },
     ),
 
-    // add user to course without duplicates
+    // add user to course AND decrement seats atomically — only once,
+    // only if the student isn't already in the course, only if seats remain
     Course.updateOne(
-      { _id: courseId, enrolledStudents: { $ne: studentId } },
-      { $addToSet: { enrolledStudents: studentId } }
+      {
+        _id: courseId,
+        enrolledStudents: { $ne: studentId },
+        availableSeats: { $gt: 0 },
+      },
+      {
+        $addToSet: { enrolledStudents: studentId },
+        $inc: { availableSeats: -1 },
+      },
     ),
   ]);
+
+  if (courseUpdate.matchedCount === 0) {
+    const alreadyEnrolled = await Course.exists({
+      _id: courseId,
+      enrolledStudents: studentId,
+    });
+    if (!alreadyEnrolled) {
+      console.error(
+        `⚠️ Seat allocation failed for paid enrollment: student ${studentId}, course ${courseId}. Course may be oversold — needs manual review.`,
+      );
+    }
+  }
 }
 
 const getAllPayments = catchAsync(async (req, res, next) => {

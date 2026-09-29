@@ -11,6 +11,7 @@ const studentWorkRoute = require('./routes/studentWorkRoute');
 const reviewRoute = require('./routes/reviewRoute');
 const paymentRoutes = require('./routes/paymentRoutes');
 const health = require('./routes/health');
+const globalErrorHandler = require('./controllers/errorController');
 
 const helmet = require('helmet');
 
@@ -30,7 +31,7 @@ app.use(
   cors({
     origin: allowedOrigins,
     credentials: true,
-  })
+  }),
 );
 // ✅ Enable Gzip compression
 app.use(compression());
@@ -63,7 +64,7 @@ app.use(
         frameAncestors: ["'self'"],
       },
     },
-  })
+  }),
 );
 
 // ✅ Logger for development
@@ -84,7 +85,7 @@ app.use(
 
       res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
     },
-  })
+  }),
 );
 
 // ✅ Serve static files from the public directory
@@ -114,4 +115,5 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'dist', 'index.html'));
 });
 
+app.use(globalErrorHandler);
 module.exports = app;

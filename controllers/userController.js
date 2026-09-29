@@ -24,6 +24,12 @@ exports.getAllUsers = catchAsync(async (req, res, next) => {
   });
 });
 exports.getUser = catchAsync(async (req, res, next) => {
+  if (req.user.role !== 'admin' && req.user.id !== req.params.id) {
+    return next(
+      new AppError('You do not have permission to perform this action', 403),
+    );
+  }
+
   const user = await User.findById(req.params.id)
     .populate({
       path: 'reviews',
@@ -53,7 +59,17 @@ exports.createUser = catchAsync(async (req, res, next) => {
   });
 });
 exports.updateUser = catchAsync(async (req, res, next) => {
-  const user = await User.findByIdAndUpdate(req.params.id, req.body, {
+  if (req.user.role !== 'admin' && req.user.id !== req.params.id) {
+    return next(
+      new AppError('You do not have permission to perform this action', 403),
+    );
+  }
+  const allowFields = ['name', 'email', 'phone'];
+  const updates = {};
+  allowFields.forEach((field) => {
+    if (req.body[field] !== undefined) updates[field] = req.body[field];
+  });
+  const user = await User.findByIdAndUpdate(req.params.id, updates, {
     new: true,
     runValidators: true,
   });
