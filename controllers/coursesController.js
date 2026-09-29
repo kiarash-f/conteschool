@@ -53,7 +53,7 @@ exports.createCourse = catchAsync(async (req, res, next) => {
 
   if (req.files['courseImages']) {
     req.body.courseImages = req.files['courseImages'].map(
-      (file) => `https://conteschool.ir/uploads/${file.filename}`
+      (file) => `https://conteschool.ir/uploads/${file.filename}`,
     );
   }
 
@@ -79,7 +79,7 @@ exports.updateCourse = catchAsync(async (req, res, next) => {
 
   if (req.files && req.files['courseImages']) {
     req.body.courseImages = req.files['courseImages'].map(
-      (file) => `https://conteschool.ir/uploads/${file.filename}`
+      (file) => `https://conteschool.ir/uploads/${file.filename}`,
     );
   }
   if (req.body.toggleActive) {
@@ -92,7 +92,7 @@ exports.updateCourse = catchAsync(async (req, res, next) => {
     {
       new: true,
       runValidators: true,
-    }
+    },
   );
 
   res.status(200).json({
@@ -114,37 +114,37 @@ exports.deleteCourse = catchAsync(async (req, res, next) => {
     data: null,
   });
 });
-exports.getEnrolledStudents = catchAsync(async (req, res, next) => {
-  const course = await Course.findById(req.params.id).populate({
-    path: 'enrolledStudents',
-    populate: {
-      path: 'enrolledCourses', // field in User model
-    },
-  });
+// exports.getEnrolledStudents = catchAsync(async (req, res, next) => {
+//   const course = await Course.findById(req.params.id).populate({
+//     path: 'enrolledStudents',
+//     populate: {
+//       path: 'enrolledCourses', // field in User model
+//     },
+//   });
 
-  if (!course) {
-    return next(new AppError('Course not found', 404));
-  }
+//   if (!course) {
+//     return next(new AppError('Course not found', 404));
+//   }
 
-  res.status(200).json({
-    status: 'success',
-    results: course.enrolledStudents.length,
-    data: {
-      students: course.enrolledStudents,
-    },
-  });
-});
-exports.getAllEnrolledStudents = catchAsync(async (req, res, next) => {
-  const students = await User.find({
-    enrolledCourses: { $exists: true, $not: { $size: 0 } },
-  }).populate('enrolledCourses'); // Only works if enrolledCourses stores Course ObjectIds
+//   res.status(200).json({
+//     status: 'success',
+//     results: course.enrolledStudents.length,
+//     data: {
+//       students: course.enrolledStudents,
+//     },
+//   });
+// });
+// exports.getAllEnrolledStudents = catchAsync(async (req, res, next) => {
+//   const students = await User.find({
+//     enrolledCourses: { $exists: true, $not: { $size: 0 } },
+//   }).populate('enrolledCourses'); // Only works if enrolledCourses stores Course ObjectIds
 
-  res.status(200).json({
-    status: 'success',
-    results: students.length,
-    data: { students },
-  });
-});
+//   res.status(200).json({
+//     status: 'success',
+//     results: students.length,
+//     data: { students },
+//   });
+// });
 exports.addUserToCourse = catchAsync(async (req, res, next) => {
   const { userId, courseId } = req.params;
 
@@ -160,7 +160,7 @@ exports.addUserToCourse = catchAsync(async (req, res, next) => {
 
   // avoid duplicates
   const already = (user.enrolledCourses || []).some(
-    (ec) => ec.course?.toString() === courseId
+    (ec) => ec.course?.toString() === courseId,
   );
   if (already) {
     return res
@@ -191,21 +191,19 @@ exports.removeStudentFromCourse = catchAsync(async (req, res, next) => {
 
   const before = user.enrolledCourses.length;
   user.enrolledCourses = user.enrolledCourses.filter(
-    (ec) => ec.course?.toString() !== courseId
+    (ec) => ec.course?.toString() !== courseId,
   );
 
   course.enrolledStudents = (course.enrolledStudents || []).filter(
-    (id) => id.toString() !== userId
+    (id) => id.toString() !== userId,
   );
   if (user.enrolledCourses.length < before) {
     course.availableSeats += 1;
   }
 
   await Promise.all([user.save(), course.save()]);
-  res
-    .status(200)
-    .json({
-      status: 'success',
-      message: 'User removed from course successfully',
-    });
+  res.status(200).json({
+    status: 'success',
+    message: 'User removed from course successfully',
+  });
 });

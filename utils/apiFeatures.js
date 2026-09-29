@@ -1,3 +1,18 @@
+function sanitizeQuery(input) {
+  if (Array.isArray(input)) {
+    return input.map(sanitizeQuery);
+  }
+  if (input !== null && typeof input === 'object') {
+    const clean = {};
+    Object.keys(input).forEach((key) => {
+      if (key.startsWith('$') || key.includes('.')) return; // drop dangerous keys
+      clean[key] = sanitizeQuery(input[key]);
+    });
+    return clean;
+  }
+  return input;
+}
+
 class APIFeatures {
   constructor(query, queryString) {
     this.query = query;
@@ -7,11 +22,13 @@ class APIFeatures {
   filter() {
     const queryObj = { ...this.queryString };
     const excludedFields = ['page', 'sort', 'limit', 'fields'];
-    excludedFields.forEach(el => delete queryObj[el]);
+    excludedFields.forEach((el) => delete queryObj[el]);
+
+    const sanitizedQuery = sanitizeQuery(queryObj);
 
     // 1B) Advanced filtering
-    let queryStr = JSON.stringify(queryObj);
-    queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, match => `$${match}`);
+    let queryStr = JSON.stringify(sanitizedQuery);
+    queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`);
 
     this.query = this.query.find(JSON.parse(queryStr));
 

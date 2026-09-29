@@ -12,7 +12,7 @@ router
     authController.protect,
     authController.restrictTo('admin'),
     imageUpload,
-    studentWorkController.createStudentWork
+    studentWorkController.createStudentWork,
   );
 router
   .route('/:id')
@@ -22,12 +22,12 @@ router
     authController.protect,
     authController.restrictTo('admin'),
     imageUpload,
-    studentWorkController.updateStudentWork
+    studentWorkController.updateStudentWork,
   )
   .delete(
-    studentWorkController.deleteStudentWork,
     authController.protect,
-    authController.restrictTo('admin')
+    authController.restrictTo('admin'),
+    studentWorkController.deleteStudentWork,
   );
 
 module.exports = router;
