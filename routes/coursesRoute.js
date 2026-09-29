@@ -5,9 +5,8 @@ const { imageUpload } = require('../controllers/uploadController');
 
 const router = express.Router();
 
-router.get('/enrolled-students', coursesController.getAllEnrolledStudents);
-router.get('/:id/enrolled-students', coursesController.getEnrolledStudents);
-
+// router.get('/enrolled-students', coursesController.getAllEnrolledStudents);
+// router.get('/:id/enrolled-students', coursesController.getEnrolledStudents);
 
 router
   .route('/')
@@ -16,7 +15,7 @@ router
     authController.protect,
     authController.restrictTo('admin'),
     imageUpload,
-    coursesController.createCourse
+    coursesController.createCourse,
   );
 
 router
@@ -26,12 +25,12 @@ router
     authController.protect,
     authController.restrictTo('admin'),
     imageUpload,
-    coursesController.updateCourse
+    coursesController.updateCourse,
   )
   .delete(
-    coursesController.deleteCourse,
     authController.protect,
-    authController.restrictTo('admin')
+    authController.restrictTo('admin'),
+    coursesController.deleteCourse,
   );
 
 module.exports = router;

@@ -12,22 +12,21 @@ router
     authController.protect,
     authController.restrictTo('admin'),
     imageUpload,
-    newsController.createNews
+    newsController.createNews,
   );
 router
   .route('/:id')
-
+  .get(newsController.getNews)
   .patch(
     authController.protect,
     authController.restrictTo('admin'),
     imageUpload,
-    newsController.updateNews
+    newsController.updateNews,
   )
   .delete(
-    newsController.deleteNews,
     authController.protect,
-    authController.restrictTo('admin')
-  )
-  .get(newsController.getNews);
+    authController.restrictTo('admin'),
+    newsController.deleteNews,
+  );
 
 module.exports = router;
