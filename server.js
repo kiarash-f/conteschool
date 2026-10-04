@@ -22,6 +22,21 @@ if (!DB) {
   process.exit(1);
 }
 
+const EXPECTED_ENV = [
+  'JWT_SECRET',
+  'JWT_EXPIRES_IN',
+  'MESSAGEWAY_API_KEY',
+  'ZARINPAL_MERCHANT_ID',
+  'ZARINPAL_CALLBACK_URL',
+  'FRONT_URL',
+];
+const missingEnv = EXPECTED_ENV.filter((name) => !process.env[name]);
+if (missingEnv.length) {
+  console.error(
+    `⚠️ Missing environment variables (set them in the Liara dashboard): ${missingEnv.join(', ')}`
+  );
+}
+
 mongoose
   .connect(DB, { maxPoolSize: 10 })
   .then(() => console.log('✅ MongoDB connection established successfully'))
