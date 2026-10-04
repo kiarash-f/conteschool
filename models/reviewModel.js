@@ -75,10 +75,10 @@ reviewSchema.post(/^findOneAnd/, async function () {
     await this.r.constructor.calcAverageRatings(this.r.course);
   }
 });
-reviewSchema.pre(/^find/, function (next) {
-  this.populate({ path: 'user' }).populate({ path: 'course', select: 'name' });
-  next();
-});
+// reviewSchema.pre(/^find/, function (next) {
+//   this.populate({ path: 'user' }).populate({ path: 'course', select: 'name' });
+//   next();
+// });
 
 const Review = mongoose.model('Review', reviewSchema);
 module.exports = Review;
