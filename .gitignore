@@ -3,3 +3,7 @@ node_modules/
 uploads/
 .env
 .env/
+config.env
+.env.*
+!.env.example
+*postman_collection*.json
