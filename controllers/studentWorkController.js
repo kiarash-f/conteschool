@@ -4,7 +4,7 @@ const AppError = require('../utils/appError');
 
 exports.getAllStudentWorks = catchAsync(async (req, res, next) => {
   const studentWorks = await StudentWork.find()
-    .populate('student', 'name email')
+    .populate('student', 'name')
     .populate('course', 'name ');
   res.status(200).json({
     status: 'success',
@@ -15,8 +15,8 @@ exports.getAllStudentWorks = catchAsync(async (req, res, next) => {
   });
 });
 exports.getStudentWork = catchAsync(async (req, res, next) => {
-  const studentWork = await StudentWork.findOne(req.params.id)
-    .populate('student', 'name email')
+  const studentWork = await StudentWork.findById(req.params.id)
+    .populate('student', 'name ')
     .populate('course', 'name');
 
   if (!studentWork) {
@@ -51,7 +51,7 @@ exports.updateStudentWork = catchAsync(async (req, res, next) => {
     {
       new: true,
       runValidators: true,
-    }
+    },
   );
 
   res.status(200).json({

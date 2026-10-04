@@ -9,7 +9,7 @@ const jwt = require('jsonwebtoken');
 
 exports.getAllCourses = catchAsync(async (req, res, next) => {
   // Execute query
-  console.log('Fetching all courses...');
+  // console.log('Fetching all courses...');
   const features = new APIFeatures(Course.find(), req.query)
     .filter()
     .sort()
@@ -17,7 +17,7 @@ exports.getAllCourses = catchAsync(async (req, res, next) => {
     .paginate();
   const courses = await features.query.populate({
     path: 'reviews',
-    populate: { path: 'user' },
+    populate: { path: 'user' , select :'name'},
   });
 
   // Send response
@@ -32,7 +32,7 @@ exports.getAllCourses = catchAsync(async (req, res, next) => {
 exports.getCourse = catchAsync(async (req, res, next) => {
   const course = await Course.findById(req.params.id).populate({
     path: 'reviews',
-    populate: { path: 'user' },
+    populate: { path: 'user' , select :'name' },
   });
 
   if (!course) {
