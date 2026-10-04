@@ -3,7 +3,7 @@ const User = require('../models/userModel');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 const { promisify } = require('util');
-const { sendMockOTP, sendOtpSMS, message } = require('../utils/sms');
+const { sendOtpSMS, message } = require('../utils/sms');
 
 const signToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -11,16 +11,14 @@ const signToken = (id) => {
   });
 };
 exports.login = catchAsync(async (req, res, next) => {
-  let { email, phone, otp } = req.body;
+  const { otp } = req.body;
+  const phone = typeof req.body.phone === 'string' ? req.body.phone.trim() : '';
 
-  email = email?.trim().toLowerCase();
-  phone = phone?.trim();
-
-  if (!email && !phone) {
-    return next(new AppError('Please provide phone or email', 400));
+  if (!phone) {
+    return next(new AppError('Please provide phone', 400));
   }
 
-  const user = await User.findOne(phone ? { phone } : { email });
+  const user = await User.findOne({ phone });
 
   if (!otp) {
     if (!user) {
@@ -28,15 +26,11 @@ exports.login = catchAsync(async (req, res, next) => {
     }
 
     try {
-      if (phone) {
-        await sendOtpSMS(phone);
-      } else {
-        await sendMockOTP(email, '000000');
-      }
+      await sendOtpSMS(phone);
     } catch (err) {
-      console.error('SMS/email sending error:', err);
+      console.error('SMS sending error:', err);
       return next(
-        new AppError('خطا در ارسال کد. لطفاً دوباره تلاش کنید.', 500)
+        new AppError('خطا در ارسال کد. لطفاً دوباره تلاش کنید.', 500),
       );
     }
 
@@ -46,17 +40,11 @@ exports.login = catchAsync(async (req, res, next) => {
     });
   }
 
-  // --- 3) Verify provided OTP ---
-  if (phone) {
-    try {
-      await message.verify({ mobile: phone, otp });
-    } catch (error) {
-      console.error('OTP verification failed:', error);
-      return next(new AppError('Invalid or expired OTP', 400));
-    }
-  } else {
-    const isValid = otp === '000000'; // dev only
-    if (!isValid) return next(new AppError('Invalid or expired OTP', 400));
+  try {
+    await message.verify({ mobile: phone, otp });
+  } catch (error) {
+    console.error('OTP verification failed:', error);
+    return next(new AppError('Invalid or expired OTP', 400));
   }
 
   if (!user) {
@@ -122,7 +110,7 @@ exports.protect = catchAsync(async (req, res, next) => {
   const currentUser = await User.findById(decoded.id);
   if (!currentUser) {
     return next(
-      new AppError('The user belonging to this token no longer exists.', 401)
+      new AppError('The user belonging to this token no longer exists.', 401),
     );
   }
 
@@ -133,7 +121,7 @@ exports.restrictTo = (...roles) => {
   return (req, res, next) => {
     if (!roles.includes(req.user.role)) {
       return next(
-        new AppError('You do not have permission to perform this action', 403)
+        new AppError('You do not have permission to perform this action', 403),
       );
     }
     next();
