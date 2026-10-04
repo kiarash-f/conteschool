@@ -60,10 +60,14 @@ const requestPayment = catchAsync(async (req, res, next) => {
   const amountRial = normalizeAmountToRial(course.price);
   if (!amountRial) return next(new AppError('مبلغ نامعتبر است', 400));
 
+  const callbackUrl =
+    process.env.ZARINPAL_CALLBACK_URL ||
+    `${process.env.FRONT_URL || 'https://conteschool.ir'}/api/v1/payments/verify`;
+
   const payload = {
     merchant_id: process.env.ZARINPAL_MERCHANT_ID,
     amount: amountRial,
-    callback_url: process.env.ZARINPAL_CALLBACK_URL,
+    callback_url: callbackUrl,
     description: description || `پرداخت کاربر ${studentId}`,
     metadata: { email, mobile },
   };
@@ -71,7 +75,13 @@ const requestPayment = catchAsync(async (req, res, next) => {
   let response;
   try {
     response = await axios.post(REQ_URL, payload);
-  } catch {
+  } catch (e) {
+    console.error('Zarinpal payment request failed:', {
+      http: e?.response?.status,
+      errors: e?.response?.data?.errors,
+      code: e?.code,
+      message: e?.message,
+    });
     throw new AppError('خطا در ارتباط با درگاه پرداخت', 502);
   }
 
@@ -133,6 +143,7 @@ const requestPayment = catchAsync(async (req, res, next) => {
     return res.status(200).json({ url: payUrl, authority });
   }
 
+  console.error('Zarinpal payment request rejected:', data?.errors || data?.data);
   return next(new AppError('خطا در ایجاد تراکنش پرداخت', 400));
 });
 
