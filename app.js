@@ -36,9 +36,16 @@ app.use(
 // ✅ Enable Gzip compression
 app.use(compression());
 app.set('trust proxy', 1);
+app.use((req, res, next) => {
+  if (req.hostname === 'www.conteschool.ir') {
+    return res.redirect(302, `https://conteschool.ir${req.originalUrl}`);
+  }
+  next();
+});
 app.use(
   helmet({
     crossOriginEmbedderPolicy: false,
+    referrerPolicy: { policy: 'strict-origin-when-cross-origin' },
 
     crossOriginResourcePolicy: { policy: 'same-site' },
     contentSecurityPolicy: {
