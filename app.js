@@ -74,8 +74,29 @@ app.use(
   }),
 );
 
-// ✅ Logger for development
-if (process.env.NODE_ENV !== 'production') app.use(morgan('dev'));
+// ✅ Request logging: everything in development; in production only
+// failed requests (status 400+) and payment calls, to keep the log readable
+morgan.token('path', (req) => req.originalUrl.split('?')[0].slice(0, 200));
+morgan.token('uid', (req) => (req.user ? String(req.user._id) : '-'));
+morgan.token(
+  'authority',
+  (req) => req.query.Authority || req.query.authority || '-',
+);
+
+if (process.env.NODE_ENV === 'production') {
+  app.use(
+    morgan(
+      ':method :path :status :response-time ms uid=:uid authority=:authority',
+      {
+        skip: (req, res) =>
+          res.statusCode < 400 &&
+          !req.originalUrl.startsWith('/api/v1/payments'),
+      },
+    ),
+  );
+} else {
+  app.use(morgan('dev'));
+}
 
 // ✅ Parse JSON request bodies
 app.use(express.json());

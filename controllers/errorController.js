@@ -22,6 +22,20 @@ const handleJWTError = () =>
 const handleJWTExpiredError = () =>
   new AppError('نشست شما منقضی شده است. لطفاً دوباره وارد شوید.', 401);
 
+const logError = (err, req) => {
+  const where = `${req.method} ${req.originalUrl.split('?')[0].slice(0, 200)}`;
+  const who = req.user ? String(req.user._id) : '-';
+  const msg = String(err.message).slice(0, 300);
+  if (err.isOperational) {
+    console.warn(`⚠️ ${where} -> ${err.statusCode} uid=${who} | ${msg}`);
+  } else {
+    console.error(
+      `💥 UNEXPECTED ERROR ${where} uid=${who} | ${msg}\n`,
+      err.stack || err,
+    );
+  }
+};
+
 const sendError = (err, res) => {
   const statusCode = err.statusCode || 500;
   const status = err.status || 'error';
@@ -32,10 +46,6 @@ const sendError = (err, res) => {
       ? err.message
       : 'مشکلی در سرور پیش آمده است. لطفاً بعداً دوباره تلاش کنید.',
   });
-
-  if (!err.isOperational) {
-    console.error('💥 UNEXPECTED ERROR:', err);
-  }
 };
 
 module.exports = (err, req, res, next) => {
@@ -47,5 +57,6 @@ module.exports = (err, req, res, next) => {
   if (err.name === 'JsonWebTokenError') error = handleJWTError();
   if (err.name === 'TokenExpiredError') error = handleJWTExpiredError();
 
+  logError(error, req);
   sendError(error, res);
 };

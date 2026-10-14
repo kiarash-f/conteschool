@@ -33,7 +33,6 @@ const parseAcceptTnc = (val) => {
   return ['true', '1', 'on', 'yes'].includes(s);
 };
 
-
 // ---------- REQUEST ----------
 const requestPayment = catchAsync(async (req, res, next) => {
   const { description, email, mobile, courseId } = req.body;
@@ -143,7 +142,10 @@ const requestPayment = catchAsync(async (req, res, next) => {
     return res.status(200).json({ url: payUrl, authority });
   }
 
-  console.error('Zarinpal payment request rejected:', data?.errors || data?.data);
+  console.error(
+    'Zarinpal payment request rejected:',
+    data?.errors || data?.data,
+  );
   return next(new AppError('خطا در ایجاد تراکنش پرداخت', 400));
 });
 
@@ -163,7 +165,15 @@ const verifyPayment = catchAsync(async (req, res, next) => {
   if (Status !== 'OK') {
     if (payment.status !== 'success') {
       payment.status = 'failed';
-      await payment.save().catch(() => {});
+      await payment
+        .save()
+        .catch((e) =>
+          console.error(
+            'Payment status save failed:',
+            payment.authority,
+            e.message,
+          ),
+        );
     }
     return WANT_JSON
       ? res.status(400).json({ success: false, message: 'پرداخت لغو شد' })
@@ -311,7 +321,15 @@ const verifyPayment = catchAsync(async (req, res, next) => {
 
   // failed
   payment.status = 'failed';
-  await payment.save().catch(() => {});
+  await payment
+    .save()
+    .catch((e) =>
+      console.error(
+        'Payment status save failed:',
+        payment.authority,
+        e.message,
+      ),
+    );
   return WANT_JSON
     ? res.status(400).json({
         success: false,
@@ -343,7 +361,6 @@ const getPaymentResult = catchAsync(async (req, res, next) => {
     createdAt: p.createdAt,
   });
 });
-
 
 // ---------- Helper: idempotent enrollment (no transactions) ----------
 async function enrollUserToCourseIdempotent(studentId, courseId) {
