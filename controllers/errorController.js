@@ -22,6 +22,14 @@ const handleJWTError = () =>
 const handleJWTExpiredError = () =>
   new AppError('نشست شما منقضی شده است. لطفاً دوباره وارد شوید.', 401);
 
+const handleMulterError = (err) => {
+  if (err.code === 'LIMIT_FILE_SIZE')
+    return new AppError('حجم هر تصویر نباید بیشتر از ۲۰ مگابایت باشد', 400);
+  if (err.code === 'LIMIT_UNEXPECTED_FILE' || err.code === 'LIMIT_FILE_COUNT')
+    return new AppError('تعداد یا نام فایل‌های ارسالی معتبر نیست', 400);
+  return new AppError('ارسال فایل نامعتبر است', 400);
+};
+
 const logError = (err, req) => {
   const where = `${req.method} ${req.originalUrl.split('?')[0].slice(0, 200)}`;
   const who = req.user ? String(req.user._id) : '-';
@@ -56,6 +64,7 @@ module.exports = (err, req, res, next) => {
   if (err.name === 'ValidationError') error = handleValidationErrorDB(err);
   if (err.name === 'JsonWebTokenError') error = handleJWTError();
   if (err.name === 'TokenExpiredError') error = handleJWTExpiredError();
+  if (err.name === 'MulterError') error = handleMulterError(err);
 
   logError(error, req);
   sendError(error, res);
