@@ -2,11 +2,12 @@ const express = require('express');
 const userController = require('../controllers/userController');
 const authController = require('../controllers/authController');
 const courseController = require('../controllers/coursesController');
+const authLimiters = require('../utils/authLimiters');
 
 const router = express.Router();
 
-router.post('/signup', authController.signup);
-router.post('/login', authController.login);
+router.post('/signup', authLimiters.signupPerIp, authController.signup);
+router.post('/login', authLimiters.login, authController.login);
 router.post('/logout', authController.logout);
 
 router.use(authController.protect);
